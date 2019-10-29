@@ -8,33 +8,19 @@ import javafx.stage.Window;
 
 import java.io.File;
 
-public class LayoutController {
+public class MainController {
     @FXML
     private TextField fileNameField;
-
     @FXML
     private Spinner colRangeFrom;
-
     @FXML
     private Spinner colRangeTo;
-
     @FXML
     private Spinner rowRangeFrom;
-
     @FXML
     private Spinner rowRangeTo;
-
-    @FXML
-    private TextField emailField;
-
-    @FXML
-    private PasswordField passwordField;
-
     @FXML
     private Button submitButton;
-
-    @FXML
-    private Button selectFileButton;
 
     //This method name must be 'initialize'!
     @SuppressWarnings("unchecked")
@@ -66,8 +52,8 @@ public class LayoutController {
             return;
         }
         fileNameField.setText(file.toString());
-
     }
+
     @FXML
     protected void handleSubmitButtonAction(ActionEvent event) {
         Window owner = submitButton.getScene().getWindow();
