@@ -1,10 +1,11 @@
-package pl.polsl.coolsoft.view;
+package pl.polsl.coolsoft.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import pl.polsl.coolsoft.view.AlertHelper;
 
 import java.io.File;
 

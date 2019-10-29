@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="720.0" prefWidth="1045.0" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.polsl.coolsoft.view.MainController">
+<VBox prefHeight="720.0" prefWidth="1045.0" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.polsl.coolsoft.controller.MainController">
    <children>
       <HBox prefHeight="40.0" prefWidth="1097.0" style="-fx-background-color: #D5D5D5;">
          <children>
