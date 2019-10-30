@@ -8,6 +8,8 @@ import javafx.stage.Window;
 import pl.polsl.coolsoft.view.AlertHelper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class MainController {
     @FXML
@@ -22,6 +24,9 @@ public class MainController {
     private Spinner rowRangeTo;
     @FXML
     private Button submitButton;
+    @FXML
+    private TextArea fileContentsTextArea;
+
 
     //This method name must be 'initialize'!
     @SuppressWarnings("unchecked")
@@ -48,11 +53,20 @@ public class MainController {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Any file extension", "*.*");
         fileChooser.getExtensionFilters().add(extFilter);
-        File file = fileChooser.showOpenDialog(owner);
-        if (file == null) {
+        File inputFile = fileChooser.showOpenDialog(owner);
+        if (inputFile == null) {
             return;
         }
-        fileNameField.setText(file.toString());
+        fileNameField.setText(inputFile.toString());
+
+        try {
+            Scanner s = new Scanner(inputFile);
+            while (s.hasNextLine()) {
+                fileContentsTextArea.appendText(s.nextLine() + "\n");
+            }
+        } catch (FileNotFoundException ex) {
+            System.err.println(ex);
+        }
     }
 
     @FXML

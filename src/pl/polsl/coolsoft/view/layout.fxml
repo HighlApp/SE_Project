@@ -6,6 +6,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -25,7 +26,7 @@
             </Label>
          </children>
       </HBox>
-      <GridPane alignment="center" hgap="10" prefHeight="722.0" prefWidth="1045.0" vgap="10">
+      <GridPane alignment="center" hgap="10" prefHeight="426.0" prefWidth="1045.0" vgap="10">
           <padding>
             <Insets bottom="40" left="40" right="40" top="40" />
          </padding>
@@ -69,5 +70,6 @@
             <RowConstraints />
          </rowConstraints>
       </GridPane>
+      <TextArea fx:id="fileContentsTextArea" prefHeight="259.0" prefWidth="1045.0" />
    </children>
 </VBox>
