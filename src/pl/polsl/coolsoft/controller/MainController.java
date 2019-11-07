@@ -15,17 +15,25 @@ public class MainController {
     @FXML
     private TextField fileNameField;
     @FXML
-    private Spinner colRangeFrom;
+    private Spinner colExportRangeFrom;
     @FXML
-    private Spinner colRangeTo;
+    private Spinner colExportRangeTo;
     @FXML
-    private Spinner rowRangeFrom;
+    private Spinner rowExportRangeFrom;
     @FXML
-    private Spinner rowRangeTo;
+    private Spinner rowExportRangeTo;
+    @FXML
+    private Spinner colFilterRangeFrom;
+    @FXML
+    private Spinner colFilterRangeTo;
+    @FXML
+    private Spinner fieldMaxLength;
     @FXML
     private Button submitButton;
     @FXML
     private TextArea fileContentsTextArea;
+    @FXML
+    private ChoiceBox filterChoiceBox;
 
 
     //This method name must be 'initialize'!
@@ -39,12 +47,25 @@ public class MainController {
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 1);
         SpinnerValueFactory<Integer> rowRangeToFactory =
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 20);
+        SpinnerValueFactory<Integer> colExportFromFactory =
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 1);
+        SpinnerValueFactory<Integer> colExportToFactory =
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 20);
+        SpinnerValueFactory<Integer> fieldMaxLengthFactory =
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 20);
 
 
-        colRangeFrom.setValueFactory(colRangeFromFactory);
-        colRangeTo.setValueFactory(colRangeToFactory);
-        rowRangeFrom.setValueFactory(rowRangeFromFactory);
-        rowRangeTo.setValueFactory(rowRangeToFactory);
+        colExportRangeFrom.setValueFactory(colRangeFromFactory);
+        colExportRangeTo.setValueFactory(colRangeToFactory);
+        rowExportRangeFrom.setValueFactory(rowRangeFromFactory);
+        rowExportRangeTo.setValueFactory(rowRangeToFactory);
+        colFilterRangeFrom.setValueFactory(colExportFromFactory);
+        colFilterRangeTo.setValueFactory(colExportToFactory);
+        fieldMaxLength.setValueFactory(fieldMaxLengthFactory);
+
+        colFilterRangeFrom.setDisable(true);
+        colFilterRangeTo.setDisable(true);
+
     }
 
     @FXML
@@ -67,6 +88,16 @@ public class MainController {
         } catch (FileNotFoundException ex) {
             System.err.println(ex);
         }
+    }
+
+    @FXML
+    protected void handleFilterChoiceBoxAction(ActionEvent event) {
+        boolean isDisabled = false;
+        if ("None".equals(filterChoiceBox.getValue())) {
+            isDisabled = true;
+        }
+        colFilterRangeFrom.setDisable(isDisabled);
+        colFilterRangeTo.setDisable(isDisabled);
     }
 
     @FXML
