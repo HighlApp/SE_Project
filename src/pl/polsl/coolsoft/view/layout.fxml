@@ -60,10 +60,6 @@
          <Label text="Transposed : " GridPane.rowIndex="6" />
          <Label text="Column export range : " GridPane.rowIndex="3" />
          <Label layoutX="57.0" layoutY="292.0" text="Row export range : " GridPane.rowIndex="4" />
-         <Spinner fx:id="rowExportRangeFrom" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-         <Spinner fx:id="rowExportRangeTo" editable="true" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-         <Spinner fx:id="colExportRangeFrom" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-         <Spinner fx:id="colExportRangeTo" editable="true" GridPane.columnIndex="2" GridPane.rowIndex="3" />
          <Label text="Filter : " GridPane.rowIndex="2" />
          <ChoiceBox fx:id="filterChoiceBox" onAction="#handleFilterChoiceBoxAction" prefHeight="31.0" prefWidth="187.0" value="None" GridPane.columnIndex="3" GridPane.rowIndex="2">
              <items>
@@ -75,8 +71,6 @@
                  </FXCollections>
              </items>
          </ChoiceBox>
-         <Spinner fx:id="colFilterRangeFrom" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-         <Spinner fx:id="colFilterRangeTo" editable="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
          <Label text="Field max length : " GridPane.rowIndex="5" />
          <Spinner fx:id="fieldMaxLength" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="137.0" text="Refresh preview" GridPane.rowIndex="8">
@@ -92,6 +86,9 @@
                <Insets left="25.0" />
             </GridPane.margin>
          </Label>
+          <TextField fx:id="cFilterRange" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+          <TextField fx:id="cExportRange" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+          <TextField fx:id="rExportRange" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          <rowConstraints>
             <RowConstraints />
             <RowConstraints />

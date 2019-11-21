@@ -9,23 +9,19 @@ import pl.polsl.coolsoft.view.AlertHelper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MainController {
     @FXML
     private TextField fileNameField;
     @FXML
-    private Spinner colExportRangeFrom;
+    private TextField cExportRange;
     @FXML
-    private Spinner colExportRangeTo;
+    private TextField rExportRange;
     @FXML
-    private Spinner rowExportRangeFrom;
-    @FXML
-    private Spinner rowExportRangeTo;
-    @FXML
-    private Spinner colFilterRangeFrom;
-    @FXML
-    private Spinner colFilterRangeTo;
+    private TextField cFilterRange;
     @FXML
     private Spinner fieldMaxLength;
     @FXML
@@ -35,6 +31,9 @@ public class MainController {
     @FXML
     private ChoiceBox filterChoiceBox;
 
+    private List<Range> filterRanges;
+    private List<Range> columnExportRanges;
+    private List<Range> rowExportRanges;
 
     //This method name must be 'initialize'!
     @SuppressWarnings("unchecked")
@@ -55,16 +54,8 @@ public class MainController {
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 20);
 
 
-        colExportRangeFrom.setValueFactory(colRangeFromFactory);
-        colExportRangeTo.setValueFactory(colRangeToFactory);
-        rowExportRangeFrom.setValueFactory(rowRangeFromFactory);
-        rowExportRangeTo.setValueFactory(rowRangeToFactory);
-        colFilterRangeFrom.setValueFactory(colExportFromFactory);
-        colFilterRangeTo.setValueFactory(colExportToFactory);
         fieldMaxLength.setValueFactory(fieldMaxLengthFactory);
-
-        colFilterRangeFrom.setDisable(true);
-        colFilterRangeTo.setDisable(true);
+        cFilterRange.setDisable(true);
 
     }
 
@@ -96,14 +87,31 @@ public class MainController {
         if ("None".equals(filterChoiceBox.getValue())) {
             isDisabled = true;
         }
-        colFilterRangeFrom.setDisable(isDisabled);
-        colFilterRangeTo.setDisable(isDisabled);
+        cFilterRange.setDisable(isDisabled);
     }
 
     @FXML
     protected void handleSubmitButtonAction(ActionEvent event) {
+        // Set the ranges
+        // TODO(B) walidacja brak krzyżowania się zakresów
+        filterRanges = convertStringToRanges(cFilterRange.getText());
+        columnExportRanges = convertStringToRanges(cExportRange.getText());
+        rowExportRanges = convertStringToRanges(rExportRange.getText());
+
+        //FIXME
         Window owner = submitButton.getScene().getWindow();
             AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Warning!",
                     "Twardy dysk stracił połączenie z twardszym dyskiem, a najtwardszy dysk sobie wypadł!");
+    }
+
+    private List<Range> convertStringToRanges(String inputString) {
+        List<Range> ranges = new ArrayList<>();
+        String[] strRanges = inputString.replace(" ", "").split(";");
+        for (String strRange : strRanges) {
+            if ("".equals(strRange)) continue;
+            String[] ends = strRange.split("-");
+            ranges.add(new Range(Integer.parseInt(ends[0]), Integer.parseInt(ends[1])));
+        }
+        return ranges;
     }
 }
