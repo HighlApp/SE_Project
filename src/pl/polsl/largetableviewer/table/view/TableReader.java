@@ -5,9 +5,9 @@ import pl.polsl.largetableviewer.table.exception.TableSourceFileOpeningException
 import java.io.*;
 
 public class TableReader {
-    private final char COLUMN_SEPARATOR;
-    private final char ROW_SEPARATOR;
-    private final File DATA_SOURCE;
+    private final char columnSeparator;
+    private final char rowSeparator;
+    private final File dataSource;
     private final BufferedReader tableStream;
     private int numberOfRows = 0;
     private int numberOfColumns = 0;
@@ -21,11 +21,11 @@ public class TableReader {
 
     public TableReader(char columnSeparator, char rowSeparator, String sourceFilePath)
             throws TableSourceFileOpeningException {
-        COLUMN_SEPARATOR = columnSeparator;
-        ROW_SEPARATOR = rowSeparator;
+        this.columnSeparator = columnSeparator;
+        this.rowSeparator = rowSeparator;
         try {
-            DATA_SOURCE = new File(sourceFilePath);
-            tableStream = new BufferedReader(new FileReader(DATA_SOURCE));
+            dataSource = new File(sourceFilePath);
+            tableStream = new BufferedReader(new FileReader(dataSource));
         } catch (FileNotFoundException ex) {
             throw new TableSourceFileOpeningException("Specified data/table source file could not have been opened!",
                     ex);
@@ -37,12 +37,16 @@ public class TableReader {
     }
 
     public String readNextCell() throws TableSourceFileOpeningException {
+        if(rowsCounted){
+            return null;
+        }
+
         int charCode;
         StringBuilder cellContent = new StringBuilder("");
         try {
             while ((charCode = readChar()) != -1) {
-                if (charCode == COLUMN_SEPARATOR || charCode == ROW_SEPARATOR) {
-                    if (charCode == ROW_SEPARATOR) {
+                if (charCode == columnSeparator || charCode == rowSeparator) {
+                    if (charCode == rowSeparator) {
                         ++numberOfRows;
                         if (columnsCounted == false) {
                             numberOfColumns = numberOfColumnsForCurrentRow;
@@ -55,7 +59,7 @@ public class TableReader {
 
                         }
                         numberOfColumnsForCurrentRow = 0;
-                    } else if (charCode == COLUMN_SEPARATOR) {
+                    } else if (charCode == columnSeparator) {
                         ++numberOfColumnsForCurrentRow;
                     }
 
@@ -67,8 +71,15 @@ public class TableReader {
             throw new TableSourceFileOpeningException("Reading file was interrupted, could not finish the operation!",
                     ex);
         }
+
         // EOF handling below.
         rowsCounted = true;
+        try {
+            tableStream.close();
+        }catch (IOException ex){
+            throw new TableSourceFileOpeningException("Closing the source file was not possible.", ex);
+        }
+
         if (cellContent.length() > 0) {
             return cellContent.toString();
         }
@@ -77,11 +88,11 @@ public class TableReader {
     }
 
     public char getColumnSeparator() {
-        return COLUMN_SEPARATOR;
+        return columnSeparator;
     }
 
     public char getRowSeparator() {
-        return ROW_SEPARATOR;
+        return rowSeparator;
     }
 
     public int getNumberOfRows() {
