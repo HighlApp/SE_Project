@@ -40,45 +40,45 @@
               <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="113.0" prefWidth="205.0">
         </ColumnConstraints>
             <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="200.0" prefWidth="323.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="Infinity" minWidth="200.0" prefWidth="323.0" />
           </columnConstraints>
           <!-- FileName Text Field -->
           <TextField fx:id="fileNameField" editable="false" onMouseClicked="#openFileChooser" prefHeight="40" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
       
                   
           <!-- Add Submit Button -->
-          <Button fx:id="submitButton" defaultButton="true" onAction="#handleSubmitButtonAction" prefHeight="49.0" prefWidth="126.0" text="Run" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.rowSpan="1">
+          <Button fx:id="submitButton" defaultButton="true" onAction="#handleSubmitButtonAction" prefHeight="49.0" prefWidth="126.0" text="Run" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.rowSpan="1">
               <GridPane.margin>
                   <Insets bottom="20" left="0" right="0" top="20" />
               </GridPane.margin>
           </Button>
          <Label text="Input file : " GridPane.rowIndex="1" />
-         <CheckBox mnemonicParsing="false" prefHeight="21.0" prefWidth="117.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+         <CheckBox mnemonicParsing="false" prefHeight="21.0" prefWidth="117.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
             <rotationAxis>
                <Point3D y="1.0" z="1.0" />
             </rotationAxis>
          </CheckBox>
-         <Label text="Transposed : " GridPane.rowIndex="6" />
-         <Label text="Column export range : " GridPane.rowIndex="3" />
-         <Label layoutX="57.0" layoutY="292.0" text="Row export range : " GridPane.rowIndex="4" />
-         <Label text="Filter : " GridPane.rowIndex="2" />
-         <ChoiceBox fx:id="filterChoiceBox" onAction="#handleFilterChoiceBoxAction" prefHeight="31.0" prefWidth="187.0" value="None" GridPane.columnIndex="3" GridPane.rowIndex="2">
+         <Label text="Transposed : " GridPane.rowIndex="8" />
+         <Label text="Column export range : " GridPane.rowIndex="5" />
+         <Label layoutX="57.0" layoutY="292.0" text="Row export range : " GridPane.rowIndex="6" />
+         <Label text="Filter : " GridPane.rowIndex="3" GridPane.rowSpan="2" />
+         <ChoiceBox fx:id="filterChoiceBox" onAction="#handleFilterChoiceBoxAction" value="None" GridPane.columnIndex="1" GridPane.rowIndex="3">
              <items>
                  <FXCollections fx:factory="observableArrayList">
                      <String fx:value="None" />
-                     <String fx:value="Filter 1" />
-                     <String fx:value="Filter 2" />
-                     <String fx:value="Filter 3" />
+                     <String fx:value="Numeric condition" />
+                     <String fx:value="String condition" />
                  </FXCollections>
              </items>
          </ChoiceBox>
-         <Label text="Field max length : " GridPane.rowIndex="5" />
-         <Spinner fx:id="fieldMaxLength" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-         <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="137.0" text="Refresh preview" GridPane.rowIndex="8">
+         <Label text="Field max length : " GridPane.rowIndex="7" />
+         <Spinner fx:id="fieldMaxLength" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+         <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="137.0" text="Refresh preview" GridPane.rowIndex="10">
             <opaqueInsets>
                <Insets />
             </opaqueInsets>
          </Button>
-         <Label alignment="CENTER" prefHeight="21.0" prefWidth="754.0" text="Preview panel" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="8">
+         <Label alignment="CENTER" prefHeight="21.0" prefWidth="754.0" text="Preview panel" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="10">
             <font>
                <Font size="30.0" />
             </font>
@@ -86,12 +86,43 @@
                <Insets left="25.0" />
             </GridPane.margin>
          </Label>
-          <TextField fx:id="cFilterRange" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-          <TextField fx:id="cExportRange" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-          <TextField fx:id="rExportRange" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+          <TextField fx:id="cFilterRange" promptText="Columns to filter" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+          <TextField fx:id="cExportRange" promptText="ex. 1-4;6-7;12-20" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+          <TextField fx:id="rExportRange" promptText="ex. 1-4;6-7;12-20" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+         <Label text="Delimiter : " GridPane.rowIndex="2" />
+         <TextField prefWidth="156.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         <Spinner fx:id="cFilterNumericValueFrom" editable="true" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+         <TextField fx:id="cFilterStringValue" promptText="Enter string condition" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+         <Spinner fx:id="cFilterNumericValueTo" editable="true" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+          <ChoiceBox fx:id="stringFilterModeChoiceBox" prefWidth="150.0" value="Same as" GridPane.columnIndex="2" GridPane.rowIndex="3">
+              <items>
+                  <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Same as" />
+                      <String fx:value="Different than" />
+                  </FXCollections>
+              </items>
+          </ChoiceBox>
+         <Label text="Filter storage" GridPane.columnIndex="4" GridPane.rowIndex="6">
+            <font>
+               <Font size="28.0" />
+            </font>
+         </Label>
+          <ChoiceBox fx:id="selectSavedFilterChoiceBox" prefWidth="150.0" value="Select filter" GridPane.columnIndex="4" GridPane.rowIndex="7">
+              <items>
+                  <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Select filter" />
+                      <String fx:value="Saved filter 1" />
+                      <String fx:value="Saved filter 2" />
+                      <String fx:value="Saved filter 3" />
+                  </FXCollections>
+              </items>
+          </ChoiceBox>
+         <Button fx:id="saveNewFilterButton" onAction="#handleSaveNewFilterButtonAction" mnemonicParsing="false" text="Save new filter" GridPane.columnIndex="4" GridPane.rowIndex="8" />
          <rowConstraints>
             <RowConstraints />
             <RowConstraints />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" />
+            <RowConstraints minHeight="30.0" prefHeight="30.0" />
             <RowConstraints minHeight="30.0" prefHeight="30.0" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" />
             <RowConstraints minHeight="30.0" prefHeight="30.0" />

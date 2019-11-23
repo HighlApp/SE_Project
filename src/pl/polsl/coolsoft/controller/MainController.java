@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class MainController {
@@ -23,13 +24,23 @@ public class MainController {
     @FXML
     private TextField cFilterRange;
     @FXML
+    private TextField cFilterStringValue;
+    @FXML
+    private Spinner cFilterNumericValueFrom;
+    @FXML
+    private Spinner cFilterNumericValueTo;
+    @FXML
     private Spinner fieldMaxLength;
     @FXML
     private Button submitButton;
     @FXML
+    private Button saveNewFilterButton;
+    @FXML
     private TextArea fileContentsTextArea;
     @FXML
     private ChoiceBox filterChoiceBox;
+    @FXML
+    private ChoiceBox stringFilterModeChoiceBox;
 
     private List<Range> filterRanges;
     private List<Range> columnExportRanges;
@@ -38,25 +49,25 @@ public class MainController {
     //This method name must be 'initialize'!
     @SuppressWarnings("unchecked")
     public void initialize() {
-        SpinnerValueFactory<Integer> colRangeFromFactory =
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 1);
-        SpinnerValueFactory<Integer> colRangeToFactory =
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 20);
-        SpinnerValueFactory<Integer> rowRangeFromFactory =
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 1);
-        SpinnerValueFactory<Integer> rowRangeToFactory =
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 20);
-        SpinnerValueFactory<Integer> colExportFromFactory =
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 1);
-        SpinnerValueFactory<Integer> colExportToFactory =
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 20);
         SpinnerValueFactory<Integer> fieldMaxLengthFactory =
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 20);
+        SpinnerValueFactory<Double> cFilterNumericValueFromFactory =
+                new SpinnerValueFactory.DoubleSpinnerValueFactory(-Double.MAX_VALUE, Double.MAX_VALUE, 0);
+        SpinnerValueFactory<Double> cFilterNumericValueToFactory =
+                new SpinnerValueFactory.DoubleSpinnerValueFactory(-Double.MAX_VALUE, Double.MAX_VALUE, 0);
 
+
+        filterChoiceBox.setMaxWidth(Double.POSITIVE_INFINITY);
+        fieldMaxLength.setMaxWidth(Double.POSITIVE_INFINITY);
 
         fieldMaxLength.setValueFactory(fieldMaxLengthFactory);
+        cFilterNumericValueFrom.setValueFactory(cFilterNumericValueFromFactory);
+        cFilterNumericValueTo.setValueFactory(cFilterNumericValueToFactory);
         cFilterRange.setDisable(true);
-
+        cFilterNumericValueFrom.setVisible(false);
+        cFilterNumericValueTo.setVisible(false);
+        cFilterStringValue.setVisible(false);
+        stringFilterModeChoiceBox.setVisible(false);
     }
 
     @FXML
@@ -83,21 +94,46 @@ public class MainController {
 
     @FXML
     protected void handleFilterChoiceBoxAction(ActionEvent event) {
-        boolean isDisabled = false;
-        if ("None".equals(filterChoiceBox.getValue())) {
-            isDisabled = true;
+        boolean isVisibleString = false;
+        boolean isVisibleNumeric = false;
+        if ("Numeric condition".equals(filterChoiceBox.getValue())) {
+            isVisibleString = false;
+            isVisibleNumeric = true;
+        } else if ("String condition".equals(filterChoiceBox.getValue())) {
+            isVisibleString = true;
+            isVisibleNumeric = false;
         }
-        cFilterRange.setDisable(isDisabled);
+        cFilterRange.setDisable(!(isVisibleString || isVisibleNumeric));
+        cFilterStringValue.setVisible(isVisibleString);
+        stringFilterModeChoiceBox.setVisible(isVisibleString);
+        cFilterNumericValueFrom.setVisible(isVisibleNumeric);
+        cFilterNumericValueTo.setVisible(isVisibleNumeric);
+    }
+
+    @FXML
+    protected void handleSaveNewFilterButtonAction(ActionEvent event) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setHeaderText("Saving new filter");
+        dialog.setContentText("New filter name:");
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(name -> System.out.println("New filter name: " + name));
     }
 
     @FXML
     protected void handleSubmitButtonAction(ActionEvent event) {
         // Set the ranges
         // TODO(B) walidacja brak krzyżowania się zakresów
-        filterRanges = convertStringToRanges(cFilterRange.getText());
-        columnExportRanges = convertStringToRanges(cExportRange.getText());
-        rowExportRanges = convertStringToRanges(rExportRange.getText());
+        try {
 
+            filterRanges = convertStringToRanges(cFilterRange.getText());
+            columnExportRanges = convertStringToRanges(cExportRange.getText());
+            rowExportRanges = convertStringToRanges(rExportRange.getText());
+        } catch (NumberFormatException e) {
+            Window owner = submitButton.getScene().getWindow();
+            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Warning!",
+                    "Incorrect range parameter! The format is as follows: X-X;XX-XX;XXX-XXX");
+            return;
+        }
         //FIXME
         Window owner = submitButton.getScene().getWindow();
             AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Warning!",
