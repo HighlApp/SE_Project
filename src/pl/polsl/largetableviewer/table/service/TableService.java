@@ -1,12 +1,10 @@
 package pl.polsl.largetableviewer.table.service;
 
-import pl.polsl.largetableviewer.table.exception.WrongColumnException;
 import pl.polsl.largetableviewer.table.exception.WrongRowException;
 import pl.polsl.largetableviewer.table.model.Cell;
 import pl.polsl.largetableviewer.table.model.Row;
 import pl.polsl.largetableviewer.table.model.Table;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class TableService {
@@ -60,7 +58,7 @@ public class TableService {
             throw new WrongRowException("Cannot get Cell from specified Row, because the Row is nonexistent." +" Row number: "+rowNumber);
         }
         for(Cell cell : row.getRowCells()){
-            if(cell.getColumn()==columnNumber){
+            if(cell.getColumnNumber()==columnNumber){
                 return cell;
             }
         }
@@ -86,7 +84,7 @@ public class TableService {
             if(row.isVisible()){
                 rowCells=row.getRowCells();
                 for(Cell cell : rowCells){
-                    if(columnsNumbers.contains(cell.getColumn())){
+                    if(columnsNumbers.contains(cell.getColumnNumber())){
                         cell.setVisible(visible);
                     }
                 }
