@@ -1,12 +1,29 @@
 package pl.polsl.largetableviewer.table.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Row {
     private boolean visible;
     private long rowNumber;
     private boolean transpose;
-    private List<Cell> rowCells;
+    private List<Cell> rowCells = new LinkedList<>();
+
+    public Row() {
+    }
+
+    public Row(boolean visible, long rowNumber, boolean transpose) {
+        this.visible = visible;
+        this.rowNumber = rowNumber;
+        this.transpose = transpose;
+    }
+
+    public Row(boolean visible, long rowNumber, boolean transpose, List<Cell> rowCells) {
+        this.visible = visible;
+        this.rowNumber = rowNumber;
+        this.transpose = transpose;
+        this.rowCells = rowCells;
+    }
 
     public boolean isVisible() {
         return visible;
@@ -38,5 +55,9 @@ public class Row {
 
     public void setRowCells(List<Cell> rowCells) {
         this.rowCells = rowCells;
+    }
+
+    public void addCell(Cell cell){
+        rowCells.add(cell);
     }
 }

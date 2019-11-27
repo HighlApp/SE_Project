@@ -1,33 +1,43 @@
 package pl.polsl.largetableviewer.table.model;
 
 public class Cell {
-    private String cellContents;
-    private int row;
-    private int column;
+    private String cellContent;
+    private int rowNumber;
+    private int columnNumber;
     private boolean visible;
 
-    public String getCellContents() {
-        return cellContents;
+    public Cell() {
     }
 
-    public void setCellContents(String cellContents) {
-        this.cellContents = cellContents;
+    public Cell(String cellContent, int rowNumber, int columnNumber, boolean visible) {
+        this.cellContent = cellContent;
+        this.rowNumber = rowNumber;
+        this.columnNumber = columnNumber;
+        this.visible = visible;
     }
 
-    public int getRow() {
-        return row;
+    public String getCellContent() {
+        return cellContent;
     }
 
-    public void setRow(int row) {
-        this.row = row;
+    public void setCellContent(String cellContent) {
+        this.cellContent = cellContent;
     }
 
-    public int getColumn() {
-        return column;
+    public int getRowNumber() {
+        return rowNumber;
     }
 
-    public void setColumn(int column) {
-        this.column = column;
+    public void setRowNumber(int rowNumber) {
+        this.rowNumber = rowNumber;
+    }
+
+    public int getColumnNumber() {
+        return columnNumber;
+    }
+
+    public void setColumnNumber(int columnNumber) {
+        this.columnNumber = columnNumber;
     }
 
     public boolean isVisible() {

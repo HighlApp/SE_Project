@@ -1,5 +1,6 @@
 package pl.polsl.largetableviewer.table.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Table {
@@ -8,7 +9,7 @@ public class Table {
     /**
      * Outer list is a list of of rows. Inner list is the list of cells in a row.
      */
-    private List<Row> tableRows;
+    private List<Row> tableRows = new LinkedList<>();
 
     public int getNumberOfColumns() {
         return numberOfColumns;
@@ -32,5 +33,9 @@ public class Table {
 
     public void setTableRows(List<Row> tableRows) {
         this.tableRows = tableRows;
+    }
+
+    public void addRow(Row row){
+        tableRows.add(row);
     }
 }
