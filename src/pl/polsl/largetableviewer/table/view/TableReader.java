@@ -1,6 +1,7 @@
 package pl.polsl.largetableviewer.table.view;
 
 import pl.polsl.largetableviewer.table.exception.TableSourceFileOpeningException;
+import pl.polsl.largetableviewer.table.model.Cell;
 
 import java.io.*;
 
@@ -36,17 +37,20 @@ public class TableReader {
         return tableStream.read();
     }
 
-    public String readNextCell() throws TableSourceFileOpeningException {
+    public Cell readNextCell() throws TableSourceFileOpeningException {
         if(rowsCounted){
             return null;
         }
 
         int charCode;
+        char symbol;
         StringBuilder cellContent = new StringBuilder("");
         try {
             while ((charCode = readChar()) != -1) {
-                if (charCode == columnSeparator || charCode == rowSeparator) {
-                    if (charCode == rowSeparator) {
+                symbol = (char) charCode;
+                if (symbol == columnSeparator || symbol == rowSeparator) {
+                    ++numberOfColumnsForCurrentRow;
+                    if (symbol == rowSeparator) {
                         ++numberOfRows;
                         if (columnsCounted == false) {
                             numberOfColumns = numberOfColumnsForCurrentRow;
@@ -59,13 +63,12 @@ public class TableReader {
 
                         }
                         numberOfColumnsForCurrentRow = 0;
-                    } else if (charCode == columnSeparator) {
-                        ++numberOfColumnsForCurrentRow;
                     }
-
-                    return cellContent.toString();
+                    return new Cell(cellContent.toString(),numberOfRows,numberOfColumnsForCurrentRow,true);
                 }
-                cellContent.append(charCode);
+                if(symbol!='\r'&&symbol!='\n') {
+                    cellContent.append(symbol);
+                }
             }
         } catch (IOException ex) {
             throw new TableSourceFileOpeningException("Reading file was interrupted, could not finish the operation!",
@@ -81,7 +84,8 @@ public class TableReader {
         }
 
         if (cellContent.length() > 0) {
-            return cellContent.toString();
+            return new Cell(cellContent.toString(),numberOfRows,numberOfColumnsForCurrentRow,true);
+//            return cellContent.toString();
         }
         return null;
 
