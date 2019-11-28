@@ -1,24 +1,27 @@
 package pl.polsl.largetableviewer.table.model;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Row {
     private boolean visible;
-    private long rowNumber;
+    private int rowNumber;
     private boolean transpose;
     private List<Cell> rowCells = new LinkedList<>();
 
     public Row() {
+        visible=true;
+        transpose=false;
     }
 
-    public Row(boolean visible, long rowNumber, boolean transpose) {
+    public Row(boolean visible, int rowNumber, boolean transpose) {
         this.visible = visible;
         this.rowNumber = rowNumber;
         this.transpose = transpose;
     }
 
-    public Row(boolean visible, long rowNumber, boolean transpose, List<Cell> rowCells) {
+    public Row(boolean visible, int rowNumber, boolean transpose, List<Cell> rowCells) {
         this.visible = visible;
         this.rowNumber = rowNumber;
         this.transpose = transpose;
@@ -33,11 +36,11 @@ public class Row {
         this.visible = visible;
     }
 
-    public long getRowNumber() {
+    public int getRowNumber() {
         return rowNumber;
     }
 
-    public void setRowNumber(long rowNumber) {
+    public void setRowNumber(int rowNumber) {
         this.rowNumber = rowNumber;
     }
 
@@ -50,14 +53,23 @@ public class Row {
     }
 
     public List<Cell> getRowCells() {
-        return rowCells;
+        return Collections.unmodifiableList(rowCells);
     }
 
-    public void setRowCells(List<Cell> rowCells) {
-        this.rowCells = rowCells;
-    }
+//    public void setRowCells(List<Cell> rowCells) {
+//        this.rowCells = rowCells;
+//    }
 
     public void addCell(Cell cell){
         rowCells.add(cell);
     }
+
+    public int size(){
+        return rowCells.size();
+    }
+
+    public Cell getCell(int atColumn){
+        return rowCells.get(atColumn-1);
+    }
+
 }

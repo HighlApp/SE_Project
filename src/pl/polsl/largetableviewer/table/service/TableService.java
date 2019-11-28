@@ -23,17 +23,13 @@ public class TableService {
         return table;
     }
 
-    public void setTable(Table table) {
-        this.table = table;
-    }
-
     public void addRow(Row row){
         List<Row> tableRows = table.getTableRows();
         tableRows.add(row);
         table.setTableRows(tableRows);
     }
 
-    public Row getRow(long rowNumber){
+    public Row getRow(int rowNumber){
         for(Row row : table.getTableRows()){
             if(row.getRowNumber()==rowNumber){
                 return row;
@@ -42,17 +38,16 @@ public class TableService {
         return null;
     }
 
-    public void addCell(long rowNumber, Cell cell) throws WrongRowException {
+    public void addCell(int rowNumber, Cell cell) throws WrongRowException {
         Row row = getRow(rowNumber);
         if(row==null){
             throw new WrongRowException("Cannot insert Cell into specified Row, because the Row is nonexistent."+" Row number: "+rowNumber);
         }
         List<Cell> rowCells = row.getRowCells();
         rowCells.add(cell);
-        row.setRowCells(rowCells);
     }
 
-    public Cell getCell(long columnNumber, long rowNumber) throws WrongRowException{
+    public Cell getCell(int columnNumber, int rowNumber) throws WrongRowException{
         Row row = getRow(rowNumber);
         if(row==null){
             throw new WrongRowException("Cannot get Cell from specified Row, because the Row is nonexistent." +" Row number: "+rowNumber);
@@ -92,7 +87,7 @@ public class TableService {
         }
     }
 
-    public Row transposeRow(long rowNumber){
+    public Row transposeRow(int rowNumber){
         Row row = getRow(rowNumber);
         if(row.isTranspose()){
             row.setTranspose(false);
@@ -101,4 +96,5 @@ public class TableService {
         }
         return row;
     }
+
 }

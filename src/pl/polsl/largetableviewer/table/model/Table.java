@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Table {
+    private String name;
     private int numberOfColumns;
     private int numberOfRows;
     /**
@@ -37,5 +38,13 @@ public class Table {
 
     public void addRow(Row row){
         tableRows.add(row);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

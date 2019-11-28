@@ -9,6 +9,13 @@ public class Cell {
     public Cell() {
     }
 
+    public Cell(String cellContent, int rowNumber, int columnNumber) {
+        this.cellContent = cellContent;
+        this.rowNumber = rowNumber;
+        this.columnNumber = columnNumber;
+        visible=true;
+    }
+
     public Cell(String cellContent, int rowNumber, int columnNumber, boolean visible) {
         this.cellContent = cellContent;
         this.rowNumber = rowNumber;
@@ -46,5 +53,10 @@ public class Cell {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    @Override
+    public String toString() {
+        return cellContent;
     }
 }

@@ -27,30 +27,12 @@ public class TableController {
     }
 
     private void initializeTable() throws TableSourceFileOpeningException {
-        int cellCounter;
-        Row row = new Row(true, 0, false);
-        Cell cell;
-        while (!tableReader.isColumnsCounted()) {
-            row.addCell(tableReader.readNextCell());
+        Row row = null;
+        while(!tableReader.isRowsCounted()){
+            row=tableReader.nextRow();
+            tableService.addRow(row);
         }
-        tableService.addRow(row);
-        cellCounter = tableReader.getNumberOfColumns() + 1;
-        row = null;
-        while (!tableReader.isRowsCounted()) {
-            cell = tableReader.readNextCell();
-            if(cell==null && cellCounter == tableReader.getNumberOfColumns()){
-                break; //proper finish. If second condition is not met, TODO: throw exception
-            }
-            if (cellCounter >= tableReader.getNumberOfColumns()) {
-                cellCounter = 1;
-                if (row != null) {
-                    tableService.addRow(row);
-                }
-                row = new Row(true, cell.getRowNumber(), false);
-            }
-            row.addCell(cell);
-            ++cellCounter;
-        }
-        System.out.println("Finished with: " + tableReader.getNumberOfColumns() + " columns and " + tableReader.getNumberOfRows()+" rows.");
+        tableService.getTable().setNumberOfRows(row.getRowNumber());
+        tableService.getTable().setNumberOfColumns(row.size());
     }
 }
