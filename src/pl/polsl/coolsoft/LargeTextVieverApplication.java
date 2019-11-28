@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import pl.polsl.coolsoft.filter.FilterModel;
+import pl.polsl.coolsoft.filter.FilterView;
 
 import java.io.File;
 import java.net.URL;
