@@ -51,7 +51,6 @@ public class FilterView {
 
             objectInputStream.close();
             fileInputStream.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
