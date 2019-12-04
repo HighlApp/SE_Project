@@ -15,6 +15,8 @@ public class MainController {
         //Bartek controller
         try {
             tableController = new TableController(',', ';', "D:\\studia\\sem7\\SE\\SE_Project2\\doTestow\\firstSmallTable.txt");
+            tableController.sequenceSearch("ja", null, null);
+            System.out.println(tableController.getTableStringRepresentation(',','\n'));
         }catch (TableControllerInitializationException ex){
             ex.printStackTrace();
         }catch (Exception ex){
