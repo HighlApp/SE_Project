@@ -1,7 +1,7 @@
 package pl.polsl.largetableviewer.table.model;
 
 public class Cell {
-    private String cellContent;
+    private String content;
     private int rowNumber;
     private int columnNumber;
     private boolean visible;
@@ -9,26 +9,26 @@ public class Cell {
     public Cell() {
     }
 
-    public Cell(String cellContent, int rowNumber, int columnNumber) {
-        this.cellContent = cellContent;
+    public Cell(String content, int rowNumber, int columnNumber) {
+        this.content = content;
         this.rowNumber = rowNumber;
         this.columnNumber = columnNumber;
         visible=true;
     }
 
-    public Cell(String cellContent, int rowNumber, int columnNumber, boolean visible) {
-        this.cellContent = cellContent;
+    public Cell(String content, int rowNumber, int columnNumber, boolean visible) {
+        this.content = content;
         this.rowNumber = rowNumber;
         this.columnNumber = columnNumber;
         this.visible = visible;
     }
 
-    public String getCellContent() {
-        return cellContent;
+    public String getContent() {
+        return content;
     }
 
-    public void setCellContent(String cellContent) {
-        this.cellContent = cellContent;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public int getRowNumber() {
@@ -57,6 +57,6 @@ public class Cell {
 
     @Override
     public String toString() {
-        return cellContent;
+        return content;
     }
 }

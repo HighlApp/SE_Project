@@ -8,7 +8,7 @@ public class Row {
     private boolean visible;
     private int rowNumber;
     private boolean transpose;
-    private List<Cell> rowCells = new LinkedList<>();
+    private List<Cell> cells = new LinkedList<>();
 
     public Row() {
         visible=true;
@@ -21,11 +21,11 @@ public class Row {
         this.transpose = transpose;
     }
 
-    public Row(boolean visible, int rowNumber, boolean transpose, List<Cell> rowCells) {
+    public Row(boolean visible, int rowNumber, boolean transpose, List<Cell> cells) {
         this.visible = visible;
         this.rowNumber = rowNumber;
         this.transpose = transpose;
-        this.rowCells = rowCells;
+        this.cells = cells;
     }
 
     public boolean isVisible() {
@@ -52,24 +52,24 @@ public class Row {
         this.transpose = transpose;
     }
 
-    public List<Cell> getRowCells() {
-        return Collections.unmodifiableList(rowCells);
+    public List<Cell> getCells() {
+        return Collections.unmodifiableList(cells);
     }
 
-//    public void setRowCells(List<Cell> rowCells) {
-//        this.rowCells = rowCells;
+//    public void setRowCells(List<Cell> cells) {
+//        this.cells = cells;
 //    }
 
     public void addCell(Cell cell){
-        rowCells.add(cell);
+        cells.add(cell);
     }
 
     public int size(){
-        return rowCells.size();
+        return cells.size();
     }
 
     public Cell getCell(int atColumn){
-        return rowCells.get(atColumn-1);
+        return cells.get(atColumn-1);
     }
 
 }

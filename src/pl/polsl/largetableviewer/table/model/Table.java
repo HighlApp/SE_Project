@@ -10,7 +10,7 @@ public class Table {
     /**
      * Outer list is a list of of rows. Inner list is the list of cells in a row.
      */
-    private List<Row> tableRows = new LinkedList<>();
+    private List<Row> rows = new LinkedList<>();
 
     public int getNumberOfColumns() {
         return numberOfColumns;
@@ -28,16 +28,16 @@ public class Table {
         this.numberOfRows = numberOfRows;
     }
 
-    public List<Row> getTableRows() {
-        return tableRows;
+    public List<Row> getRows() {
+        return rows;
     }
 
-    public void setTableRows(List<Row> tableRows) {
-        this.tableRows = tableRows;
+    public void setRows(List<Row> rows) {
+        this.rows = rows;
     }
 
     public void addRow(Row row){
-        tableRows.add(row);
+        rows.add(row);
     }
 
     public String getName() {
