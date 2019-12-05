@@ -26,6 +26,10 @@ public class MainController {
     @FXML
     private TextField fileNameField;
     @FXML
+    private TextField colSeparator;
+    @FXML
+    private TextField rowSeparator;
+    @FXML
     private TextField cExportRange;
     @FXML
     private TextField rExportRange;
@@ -34,10 +38,6 @@ public class MainController {
     @FXML
     private TextField cFilterStringValue;
     @FXML
-    private Spinner cFilterNumericValueFrom;
-    @FXML
-    private Spinner cFilterNumericValueTo;
-    @FXML
     private Spinner fieldMaxLength;
     @FXML
     private Button submitButton;
@@ -45,10 +45,6 @@ public class MainController {
     private Button saveNewFilterButton;
     @FXML
     private TextArea fileContentsTextArea;
-    @FXML
-    private ChoiceBox filterChoiceBox;
-    @FXML
-    private ChoiceBox stringFilterModeChoiceBox;
 
     private List<Range> filterRanges;
     private List<Range> columnExportRanges;
@@ -58,7 +54,7 @@ public class MainController {
 
     //This method name must be 'initialize'!
     @SuppressWarnings("unchecked")
-    public void initialize() throws TableControllerInitializationException {
+    public void initialize() {
         SpinnerValueFactory<Integer> fieldMaxLengthFactory =
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 20);
         SpinnerValueFactory<Double> cFilterNumericValueFromFactory =
@@ -67,21 +63,15 @@ public class MainController {
                 new SpinnerValueFactory.DoubleSpinnerValueFactory(-Double.MAX_VALUE, Double.MAX_VALUE, 0);
 
 
-        filterChoiceBox.setMaxWidth(Double.POSITIVE_INFINITY);
         fieldMaxLength.setMaxWidth(Double.POSITIVE_INFINITY);
-
         fieldMaxLength.setValueFactory(fieldMaxLengthFactory);
-        cFilterNumericValueFrom.setValueFactory(cFilterNumericValueFromFactory);
-        cFilterNumericValueTo.setValueFactory(cFilterNumericValueToFactory);
-        cFilterRange.setDisable(true);
-        cFilterNumericValueFrom.setVisible(false);
-        cFilterNumericValueTo.setVisible(false);
-        cFilterStringValue.setVisible(false);
-        stringFilterModeChoiceBox.setVisible(false);
+//        cFilterRange.setDisable(true);
+//        cFilterStringValue.setVisible(false);
+//        stringFilterModeChoiceBox.setVisible(false);
     }
 
     @FXML
-    protected void openFileChooser() throws TableControllerInitializationException {
+    protected void openFileChooser() {
         Window owner = fileNameField.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Any file extension", "*.*");
@@ -94,23 +84,21 @@ public class MainController {
         fileNameField.setText(inputFile.toString());
     }
 
-    @FXML
-    protected void handleFilterChoiceBoxAction(ActionEvent event) {
-        boolean isVisibleString = false;
-        boolean isVisibleNumeric = false;
-        if ("Numeric condition".equals(filterChoiceBox.getValue())) {
-            isVisibleString = false;
-            isVisibleNumeric = true;
-        } else if ("String condition".equals(filterChoiceBox.getValue())) {
-            isVisibleString = true;
-            isVisibleNumeric = false;
-        }
-        cFilterRange.setDisable(!(isVisibleString || isVisibleNumeric));
-        cFilterStringValue.setVisible(isVisibleString);
-        stringFilterModeChoiceBox.setVisible(isVisibleString);
-        cFilterNumericValueFrom.setVisible(isVisibleNumeric);
-        cFilterNumericValueTo.setVisible(isVisibleNumeric);
-    }
+//    @FXML
+//    protected void handleFilterChoiceBoxAction(ActionEvent event) {
+//        boolean isVisibleString = false;
+//        boolean isVisibleNumeric = false;
+//        if ("Numeric condition".equals(filterChoiceBox.getValue())) {
+//            isVisibleString = false;
+//            isVisibleNumeric = true;
+//        } else if ("String condition".equals(filterChoiceBox.getValue())) {
+//            isVisibleString = true;
+//            isVisibleNumeric = false;
+//        }
+//        cFilterRange.setDisable(!(isVisibleString || isVisibleNumeric));
+//        cFilterStringValue.setVisible(isVisibleString);
+//        stringFilterModeChoiceBox.setVisible(isVisibleString);
+//    }
 
     @FXML
     protected void handleSaveNewFilterButtonAction(ActionEvent event) {
@@ -123,10 +111,7 @@ public class MainController {
 
     @FXML
     protected void handleSubmitButtonAction(ActionEvent event) throws TableControllerInitializationException, WrongRowException, WrongColumnException {
-        // Set the ranges
-        // TODO(B) walidacja brak krzyżowania się zakresów
         try {
-
             filterRanges = convertStringToRanges(cFilterRange.getText());
             columnExportRanges = convertStringToRanges(cExportRange.getText());
             rowExportRanges = convertStringToRanges(rExportRange.getText());
@@ -137,20 +122,27 @@ public class MainController {
             return;
         }
         //FIXME
-        tableController = new TableController(',', ';', inputFile);
+        tableController = new TableController(
+                colSeparator.getText().charAt(0),
+                rowSeparator.getText().charAt(0),
+                inputFile);
+
         Table table = tableController.getTable();
-        Range fullTableRowRange = new Range(1, table.getNumberOfRows());
-        Range fullTableColumnRange = new Range(1, table.getNumberOfColumns());
+        List<Range> fullTableRowRange = Collections.singletonList(new Range(1, table.getNumberOfRows()));
+        List<Range> fullTableColRange = Collections.singletonList(new Range(1, table.getNumberOfColumns()));
 
-
-        tableController.setAllCellsVisibility(false);
-
+        tableController.setAllCellsVisibility(false); //reset all
         tableController.setRowsAndColumnsVisibility(
-                translateRangeToIntegerList(rowExportRanges),
-                translateRangeToIntegerList(columnExportRanges),
+                translateRangeToIntegerList(rowExportRanges.isEmpty() ? fullTableRowRange : rowExportRanges),
+                translateRangeToIntegerList(columnExportRanges.isEmpty() ? fullTableColRange : columnExportRanges),
                 true);
+        if (!"".equals(cFilterStringValue.getText())) {
+            tableController.sequenceSearch(cFilterStringValue.getText(),
+                    translateRangeToIntegerList(fullTableRowRange),
+                    translateRangeToIntegerList(filterRanges));
+        }
 
-        String tableStringRepresentation = tableController.getTableStringRepresentation(',', '\n');
+        String tableStringRepresentation = tableController.getTableStringRepresentation(colSeparator.getText().charAt(0), '\n');
         //%%
         fileContentsTextArea.clear();
         fileContentsTextArea.appendText(tableStringRepresentation);
@@ -167,7 +159,8 @@ public class MainController {
         for (String strRange : strRanges) {
             if ("".equals(strRange)) continue;
             String[] ends = strRange.split("-");
-            ranges.add(new Range(Integer.parseInt(ends[0]), Integer.parseInt(ends[1])));
+            ranges.add(new Range(Integer.parseInt(ends[0]),
+                    (ends.length == 2) ? Integer.parseInt(ends[1]) : Integer.parseInt(ends[0])));
         }
         return ranges;
     }
