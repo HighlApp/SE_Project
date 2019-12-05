@@ -10,6 +10,7 @@ import pl.polsl.largetableviewer.table.service.TableService;
 import pl.polsl.largetableviewer.table.view.TableReader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class TableController {
@@ -78,8 +79,8 @@ public class TableController {
      * @param rowSeparator separator of rows
      * @return table representation in form of String
      */
-    public String getTableStringRepresentation(char columnSeparator, char rowSeparator){
-        return tableService.tableStringRepresentation(columnSeparator, rowSeparator);
+    public String getTableStringRepresentation(char columnSeparator, char rowSeparator, int cellMaxLength){
+        return tableService.tableStringRepresentation(columnSeparator, rowSeparator, cellMaxLength);
     }
 
     /**
@@ -94,7 +95,35 @@ public class TableController {
         tableService.setRowsAndColumnsVisibility(rowsNumbers, columnsNumbers, visible);
     }
 
+    /**
+     * Sets visibility of all cells
+     * @param visible true if all cells should be visible, false if they should not
+     */
     public void setAllCellsVisibility(boolean visible){
         tableService.setAllCellsVisibile(visible);
+    }
+
+    /**
+     * Exports the modified table to a output file specified by path
+     * @param columnSeparator column separator
+     * @param rowSeparator row separator
+     * @param cellMaxLength maximum length for the contents of each cell
+     * @param outpitFilePath path to the output file
+     * @throws IOException thrown if the output file could not have been created
+     */
+    public void exportTable(char columnSeparator, char rowSeparator, int cellMaxLength, String outpitFilePath) throws IOException {
+        exportTable(columnSeparator, rowSeparator, cellMaxLength, new File(outpitFilePath));
+    }
+
+    /**
+     * Exports the modified table to a output file specified by path
+     * @param columnSeparator column separator
+     * @param rowSeparator row separator
+     * @param cellMaxLength maximum length for the contents of each cell
+     * @param outputFile output file
+     * @throws IOException thrown if the output file could not have been created
+     */
+    public void exportTable(char columnSeparator, char rowSeparator, int cellMaxLength, File outputFile) throws IOException {
+        tableService.exportTableToFile(columnSeparator, rowSeparator, cellMaxLength, outputFile);
     }
 }
