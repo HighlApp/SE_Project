@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import pl.polsl.coolsoft.filter.FilterException;
 import pl.polsl.coolsoft.filter.FilterModel;
 import pl.polsl.coolsoft.filter.FilterService;
 
@@ -24,15 +25,7 @@ public class LargeTextVieverApplication extends Application {
         primaryStage.show();
     }
 
-
     public static void main(String[] args) {
-        //launch(args);
-        FilterService filterService = new FilterService();
-        System.out.println("get list: ");
-        filterService.getFilterList();
-        System.out.println("save model: ");
-        filterService.saveFilter(new FilterModel("as", 5, 1));
-        System.out.println("get list: ");
-        filterService.getFilterList();
+        launch(args);
     }
 }

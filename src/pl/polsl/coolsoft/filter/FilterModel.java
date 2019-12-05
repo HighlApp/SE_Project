@@ -5,15 +5,24 @@ import java.io.Serializable;
 public class FilterModel implements Serializable {
 
     private String name;
-    private Integer row;
-    private Integer column;
+    private char columnSeparator;
+    private char rowSeparator;
+    private String columnExportRange;
+    private String rowExportRange;
+    private int fieldMaxLength;
+    private boolean transposed;
 
     public FilterModel() {}
 
-    public FilterModel(String name, Integer row, Integer column) {
+    public FilterModel(String name, char columnSeparator, char rowSeparator, String columnExportRange,
+                       String rowExportRange, int fieldMaxLength, boolean transposed) {
         this.name = name;
-        this.row = row;
-        this.column = column;
+        this.columnSeparator = columnSeparator;
+        this.rowSeparator = rowSeparator;
+        this.columnExportRange = columnExportRange;
+        this.rowExportRange = rowExportRange;
+        this.fieldMaxLength = fieldMaxLength;
+        this.transposed = transposed;
     }
 
     public String getName() {
@@ -24,28 +33,64 @@ public class FilterModel implements Serializable {
         this.name = name;
     }
 
-    public Integer getRow() {
-        return row;
+    public char getColumnSeparator() {
+        return columnSeparator;
     }
 
-    public void setRow(Integer row) {
-        this.row = row;
+    public void setColumnSeparator(char columnSeparator) {
+        this.columnSeparator = columnSeparator;
     }
 
-    public Integer getColumn() {
-        return column;
+    public char getRowSeparator() {
+        return rowSeparator;
     }
 
-    public void setColumn(Integer column) {
-        this.column = column;
+    public void setRowSeparator(char rowSeparator) {
+        this.rowSeparator = rowSeparator;
+    }
+
+    public String getColumnExportRange() {
+        return columnExportRange;
+    }
+
+    public void setColumnExportRange(String columnExportRange) {
+        this.columnExportRange = columnExportRange;
+    }
+
+    public String getRowExportRange() {
+        return rowExportRange;
+    }
+
+    public void setRowExportRange(String rowExportRange) {
+        this.rowExportRange = rowExportRange;
+    }
+
+    public int getFieldMaxLength() {
+        return fieldMaxLength;
+    }
+
+    public void setFieldMaxLength(int fieldMaxLength) {
+        this.fieldMaxLength = fieldMaxLength;
+    }
+
+    public boolean isTransposed() {
+        return transposed;
+    }
+
+    public void setTransposed(boolean transposed) {
+        this.transposed = transposed;
     }
 
     @Override
     public String toString() {
         return "FilterModel{" +
                 "name='" + name + '\'' +
-                ", row=" + row +
-                ", column=" + column +
+                ", columnSeparator=" + columnSeparator +
+                ", rowSeparator=" + rowSeparator +
+                ", columnExportRange='" + columnExportRange + '\'' +
+                ", rowExportRange='" + rowExportRange + '\'' +
+                ", fieldMaxLength=" + fieldMaxLength +
+                ", transposed=" + transposed +
                 '}';
     }
 }

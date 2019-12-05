@@ -15,15 +15,14 @@ public class FilterService {
         filterList = new ArrayList<>();
     }
 
-    public void saveFilter(FilterModel filterModel) {
+    public void saveFilter(FilterModel filterModel) throws FilterException {
 
         filterList = doesFileExist() ? (ArrayList<FilterModel>) getFilterList() : filterList;
 
         checkIfExceededTenRecords(filterList);
 
-        if (nameAlreadyExists(filterList, filterModel)) { //TODO
-            System.out.println("Name already exists!");
-            return;
+        if (nameAlreadyExists(filterList, filterModel)) {
+            throw new FilterException("Name already exists!");
         }
 
         filterList.add(filterModel);
@@ -37,11 +36,11 @@ public class FilterService {
             objectOutputStream.close();
             fileOutputStream.close();
         } catch (IOException e) {
-            System.out.println("Error while saving object! " + e.getMessage());
+            throw new FilterException("Error while saving object! " + e.getMessage());
         }
     }
 
-    public List<FilterModel> getFilterList() {
+    public List<FilterModel> getFilterList() throws FilterException {
 
         if (!doesFileExist())
             return filterList; // if file doesn't exist return simply blank list
@@ -51,7 +50,7 @@ public class FilterService {
                 FileInputStream fileInputStream = new FileInputStream("filterList");
                 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-                filterList = (ArrayList<FilterModel>) objectInputStream.readObject();
+                filterList = (List<FilterModel>) objectInputStream.readObject();
 
                 objectInputStream.close();
                 fileInputStream.close();
@@ -61,16 +60,11 @@ public class FilterService {
                 return filterList;
 
             } catch (IOException e) {
-                System.out.println("Error while IO operation! " + e.getMessage());
+                throw new FilterException("Error while IO operation! " + e.getMessage());
             } catch (ClassNotFoundException e) {
-                System.out.println("Class not found" + e.getMessage());
+                throw new FilterException("Class not found" + e.getMessage());
             }
         }
-
-        return null;
-    }
-
-    public void editFilterModel() {
 
     }
 
@@ -106,8 +100,5 @@ public class FilterService {
         File tmpDir = new File(fileName);
         return tmpDir.exists();
     }
-
-    //mozliwosc edycji //TODO
-
 
 }
