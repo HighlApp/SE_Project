@@ -9,6 +9,7 @@ import pl.polsl.largetableviewer.table.model.Table;
 import pl.polsl.largetableviewer.table.service.TableService;
 import pl.polsl.largetableviewer.table.view.TableReader;
 
+import java.io.File;
 import java.util.List;
 
 public class TableController {
@@ -20,23 +21,23 @@ public class TableController {
      * Initializes the table file by inserting it to the memory
      * @param columnSeparator column separator
      * @param rowSeparator row separator
-     * @param sourceFilePath path to the table file
+     * @param sourceFile table file
      * @throws TableControllerInitializationException in case of initialization problem (file corrupt, reading interrupts)
      */
-    public TableController(char columnSeparator, char rowSeparator, String sourceFilePath) throws TableControllerInitializationException {
-        reinitializeTable(columnSeparator, rowSeparator, sourceFilePath);
+    public TableController(char columnSeparator, char rowSeparator, File sourceFile) throws TableControllerInitializationException {
+        reinitializeTable(columnSeparator, rowSeparator, sourceFile);
     }
 
     /**
      * Used for defining new table, with new separators.
      * @param columnSeparator column separator
      * @param rowSeparator row separator
-     * @param sourceFilePath path to the table file
+     * @param sourceFile table file
      * @throws TableControllerInitializationException in case of initialization problem (file corrupt, reading interrupts)
      */
-    public void reinitializeTable(char columnSeparator, char rowSeparator, String sourceFilePath) throws TableControllerInitializationException {
+    public void reinitializeTable(char columnSeparator, char rowSeparator, File sourceFile) throws TableControllerInitializationException {
         try {
-            tableReader = new TableReader(columnSeparator, rowSeparator, sourceFilePath);
+            tableReader = new TableReader(columnSeparator, rowSeparator, sourceFile);
             tableService = new TableService();
             initializeTable();
         } catch (TableSourceFileOpeningException ex) {
@@ -91,5 +92,9 @@ public class TableController {
      */
     public void setRowsAndColumnsVisibility(List<Integer> rowsNumbers, List<Integer> columnsNumbers, boolean visible) throws WrongColumnException, WrongRowException{
         tableService.setRowsAndColumnsVisibility(rowsNumbers, columnsNumbers, visible);
+    }
+
+    public void setAllCellsVisibility(boolean visible){
+        tableService.setAllCellsVisibile(visible);
     }
 }

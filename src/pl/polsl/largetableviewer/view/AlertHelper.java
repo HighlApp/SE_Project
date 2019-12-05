@@ -1,4 +1,4 @@
-package pl.polsl.coolsoft.view;
+package pl.polsl.largetableviewer.view;
 
 import javafx.scene.control.Alert;
 import javafx.stage.Window;

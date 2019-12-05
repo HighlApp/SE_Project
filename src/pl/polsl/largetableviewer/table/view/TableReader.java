@@ -17,16 +17,16 @@ public class TableReader {
     private boolean columnsCounted = false;
     private boolean rowsCounted = false;
 
-    public TableReader(char columnSeparator, String sourceFilePath) throws TableSourceFileOpeningException {
-        this(columnSeparator, '\n', sourceFilePath);
+    public TableReader(char columnSeparator, File sourceFile) throws TableSourceFileOpeningException {
+        this(columnSeparator, '\n', sourceFile);
     }
 
-    public TableReader(char columnSeparator, char rowSeparator, String sourceFilePath)
+    public TableReader(char columnSeparator, char rowSeparator, File sourceFile)
             throws TableSourceFileOpeningException {
         this.columnSeparator = columnSeparator;
         this.rowSeparator = rowSeparator;
         try {
-            dataSource = new File(sourceFilePath);
+            dataSource = sourceFile;
             tableStream = new BufferedReader(new FileReader(dataSource));
         } catch (FileNotFoundException ex) {
             throw new TableSourceFileOpeningException("Specified data/table source file could not have been opened!",
