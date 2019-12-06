@@ -1,4 +1,4 @@
-package pl.polsl.coolsoft.filter;
+package pl.polsl.largetableviewer.filter;
 
 import java.io.Serializable;
 

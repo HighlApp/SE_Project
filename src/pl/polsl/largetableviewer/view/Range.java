@@ -1,4 +1,4 @@
-package pl.polsl.largetableviewer;
+package pl.polsl.largetableviewer.view;
 
 public class Range {
     private int from;

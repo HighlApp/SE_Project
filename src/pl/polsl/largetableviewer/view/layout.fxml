@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.Button?>
@@ -37,17 +35,16 @@
               <ColumnConstraints halignment="RIGHT" maxWidth="Infinity" minWidth="100.0" prefWidth="201.0">
         </ColumnConstraints>
             <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="113.0" prefWidth="219.0" />
-              <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="113.0" prefWidth="257.0">
+              <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="Infinity" minWidth="149.0" prefWidth="85.0">
         </ColumnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="200.0" prefWidth="264.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="Infinity" minWidth="200.0" prefWidth="323.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="Infinity" minWidth="10.0" prefWidth="10.0" />
           </columnConstraints>
           <!-- FileName Text Field -->
-          <TextField fx:id="fileNameField" editable="false" onMouseClicked="#openFileChooser" prefHeight="40" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+          <TextField fx:id="fileNameField" editable="false" onMouseClicked="#openFileChooser" prefHeight="40" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
       
                   
           <!-- Add Submit Button -->
-          <Button fx:id="submitButton" defaultButton="true" onAction="#handleSubmitButtonAction" prefHeight="49.0" prefWidth="126.0" text="Run" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.rowSpan="1">
+          <Button fx:id="submitButton" defaultButton="true" onAction="#handleSubmitButtonAction" prefHeight="49.0" prefWidth="126.0" text="Run" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="10">
               <GridPane.margin>
                   <Insets bottom="20" left="0" right="0" top="20" />
               </GridPane.margin>
@@ -64,12 +61,12 @@
          <Label text="Filter : " GridPane.rowIndex="4" GridPane.rowSpan="2" />
          <Label text="Field max length : " GridPane.rowIndex="8" />
          <Spinner fx:id="fieldMaxLength" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-         <Button fx:id="previewButton" onAction="#handleRefreshButtonAction" mnemonicParsing="false" prefHeight="31.0" prefWidth="137.0" text="Refresh preview" GridPane.rowIndex="11">
+         <Button fx:id="previewButton" mnemonicParsing="false" onAction="#handleRefreshButtonAction" prefHeight="31.0" prefWidth="137.0" text="Refresh preview" GridPane.halignment="LEFT" GridPane.rowIndex="11">
             <opaqueInsets>
                <Insets />
             </opaqueInsets>
          </Button>
-         <Label alignment="CENTER" prefHeight="21.0" prefWidth="754.0" text="Preview panel" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="11">
+         <Label alignment="CENTER" prefHeight="21.0" prefWidth="754.0" text="Preview panel" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="11">
             <font>
                <Font size="30.0" />
             </font>
@@ -81,26 +78,17 @@
           <TextField fx:id="cExportRange" promptText="ex. 1-4;6-7;12-20" GridPane.columnIndex="1" GridPane.rowIndex="6" />
           <TextField fx:id="rExportRange" promptText="ex. 1-4;6-7;12-20" GridPane.columnIndex="1" GridPane.rowIndex="7" />
          <Label text="Column separator : " GridPane.rowIndex="2" />
-         <TextField fx:id="colSeparator" prefWidth="156.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         <TextField fx:id="colSeparator" prefWidth="156.0" promptText="Single character" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          <TextField fx:id="cFilterStringValue" promptText="Enter string condition" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-         <Label text="Filter storage" GridPane.columnIndex="4" GridPane.rowIndex="7">
+         <Label text="Filter storage" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6">
             <font>
                <Font size="28.0" />
             </font>
          </Label>
-          <ChoiceBox fx:id="selectSavedFilterChoiceBox" prefWidth="150.0" value="Select filter" GridPane.columnIndex="4" GridPane.rowIndex="8">
-              <items>
-                  <FXCollections fx:factory="observableArrayList">
-                      <String fx:value="Select filter" />
-                      <String fx:value="Saved filter 1" />
-                      <String fx:value="Saved filter 2" />
-                      <String fx:value="Saved filter 3" />
-                  </FXCollections>
-              </items>
-          </ChoiceBox>
-         <Button fx:id="saveNewFilterButton" mnemonicParsing="false" onAction="#handleSaveNewFilterButtonAction" text="Save new filter" GridPane.columnIndex="4" GridPane.rowIndex="9" />
+          <ChoiceBox fx:id="selectSavedFilterChoiceBox" onAction="#handleFiterSelectionAction" prefWidth="150.0" value="Select filter" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+         <Button fx:id="saveNewFilterButton" mnemonicParsing="false" onAction="#handleSaveNewFilterButtonAction" text="Save new filter" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" />
          <Label text="Row separator : " GridPane.rowIndex="3" />
-         <TextField fx:id="rowSeparator" prefWidth="156.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         <TextField fx:id="rowSeparator" prefWidth="156.0" promptText="Single character" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          <rowConstraints>
             <RowConstraints />
             <RowConstraints />

@@ -5,18 +5,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import pl.polsl.largetableviewer.Range;
+import pl.polsl.largetableviewer.filter.FilterException;
+import pl.polsl.largetableviewer.filter.FilterModel;
+import pl.polsl.largetableviewer.filter.FilterService;
+import pl.polsl.largetableviewer.view.Range;
 import pl.polsl.largetableviewer.table.controller.TableController;
 import pl.polsl.largetableviewer.table.exception.TableControllerInitializationException;
 import pl.polsl.largetableviewer.table.exception.WrongColumnException;
 import pl.polsl.largetableviewer.table.exception.WrongRowException;
-import pl.polsl.largetableviewer.table.model.Cell;
 import pl.polsl.largetableviewer.table.model.Row;
 import pl.polsl.largetableviewer.table.model.Table;
 import pl.polsl.largetableviewer.view.AlertHelper;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -24,6 +25,7 @@ import java.util.stream.IntStream;
 public class MainController {
 
     private TableController tableController;
+    private FilterService filterService;
 
     @FXML
     private TextField fileNameField;
@@ -40,13 +42,15 @@ public class MainController {
     @FXML
     private TextField cFilterStringValue;
     @FXML
-    private Spinner fieldMaxLength;
+    private Spinner<Integer> fieldMaxLength;
     @FXML
     private Button submitButton;
     @FXML
     private Button saveNewFilterButton;
     @FXML
     private TextArea fileContentsTextArea;
+    @FXML
+    private ChoiceBox<String> selectSavedFilterChoiceBox;
     @FXML
     private CheckBox transposedCheckBox;
 
@@ -58,25 +62,24 @@ public class MainController {
 
     //This method name must be 'initialize'!
     @SuppressWarnings("unchecked")
-    public void initialize() {
+    public void initialize() throws FilterException {
+        filterService = new FilterService();
+        List<FilterModel> filterList = filterService.getFilterList();
+        for (FilterModel filter : filterList) {
+            selectSavedFilterChoiceBox.getItems().add(filter.getName());
+        }
+
         SpinnerValueFactory<Integer> fieldMaxLengthFactory =
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 20);
-        SpinnerValueFactory<Double> cFilterNumericValueFromFactory =
-                new SpinnerValueFactory.DoubleSpinnerValueFactory(-Double.MAX_VALUE, Double.MAX_VALUE, 0);
-        SpinnerValueFactory<Double> cFilterNumericValueToFactory =
-                new SpinnerValueFactory.DoubleSpinnerValueFactory(-Double.MAX_VALUE, Double.MAX_VALUE, 0);
 
         fieldMaxLength.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                fieldMaxLength.increment(0); // won't change value, but will commit editor
+                fieldMaxLength.increment(0);
             }
         });
 
         fieldMaxLength.setMaxWidth(Double.POSITIVE_INFINITY);
         fieldMaxLength.setValueFactory(fieldMaxLengthFactory);
-//        cFilterRange.setDisable(true);
-//        cFilterStringValue.setVisible(false);
-//        stringFilterModeChoiceBox.setVisible(false);
     }
 
     @FXML
@@ -93,29 +96,52 @@ public class MainController {
         fileNameField.setText(inputFile.toString());
     }
 
-//    @FXML
-//    protected void handleFilterChoiceBoxAction(ActionEvent event) {
-//        boolean isVisibleString = false;
-//        boolean isVisibleNumeric = false;
-//        if ("Numeric condition".equals(filterChoiceBox.getValue())) {
-//            isVisibleString = false;
-//            isVisibleNumeric = true;
-//        } else if ("String condition".equals(filterChoiceBox.getValue())) {
-//            isVisibleString = true;
-//            isVisibleNumeric = false;
-//        }
-//        cFilterRange.setDisable(!(isVisibleString || isVisibleNumeric));
-//        cFilterStringValue.setVisible(isVisibleString);
-//        stringFilterModeChoiceBox.setVisible(isVisibleString);
-//    }
-
     @FXML
     protected void handleSaveNewFilterButtonAction(ActionEvent event) {
+        Window owner = saveNewFilterButton.getScene().getWindow();
+        if ("".equals(colSeparator.getText()) || "".equals(rowSeparator.getText())) {
+            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Error!",
+                    "You must specify separators!");
+            return;
+        } else if (colSeparator.getText().length() > 1 || rowSeparator.getText().length() > 1) {
+            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Error!",
+                    "Separator must be a single character!");
+            return;
+        }
         TextInputDialog dialog = new TextInputDialog();
         dialog.setHeaderText("Saving new filter");
         dialog.setContentText("New filter name:");
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(name -> System.out.println("New filter name: " + name));
+        result.ifPresent(name -> {
+            System.out.println("New filter name: " + name);
+            FilterModel filterModel = new FilterModel();
+            filterModel.setName(name);
+            filterModel.setColumnSeparator(colSeparator.getText().charAt(0));
+            filterModel.setRowSeparator(rowSeparator.getText().charAt(0));
+            filterModel.setColumnExportRange(cExportRange.getText());
+            filterModel.setRowExportRange(rExportRange.getText());
+            filterModel.setFieldMaxLength(fieldMaxLength.getValue());
+            filterModel.setTransposed(transposedCheckBox.isSelected());
+            try {
+                filterService.saveFilter(filterModel);
+                selectSavedFilterChoiceBox.getItems().add(name);
+                AlertHelper.showAlert(Alert.AlertType.INFORMATION, owner, "Information",
+                    "Filter " + name + " has been saved successfuly!");
+            } catch (FilterException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @FXML
+    protected void handleFiterSelectionAction(ActionEvent event) {
+        FilterModel filter = filterService.getModelByName(selectSavedFilterChoiceBox.getValue());
+        colSeparator.setText(String.valueOf(filter.getColumnSeparator()));
+        rowSeparator.setText(String.valueOf(filter.getRowSeparator()));
+        cExportRange.setText(String.valueOf(filter.getColumnExportRange()));
+        rExportRange.setText(String.valueOf(filter.getRowExportRange()));
+        fieldMaxLength.getValueFactory().setValue(filter.getFieldMaxLength());
+        transposedCheckBox.setSelected(filter.isTransposed());
     }
 
     @FXML
@@ -134,7 +160,7 @@ public class MainController {
         performTransformations();
         String previewString = tableController.getTableStringRepresentation(
                 colSeparator.getText().charAt(0), '\n',
-                (Integer)fieldMaxLength.getValue(), 5);
+                (Integer)fieldMaxLength.getValue(), 20);
 //        String tableStringRepresentation = tableController.getTableStringRepresentation(
 //                colSeparator.getText().charAt(0), '\n', (Integer)fieldMaxLength.getValue());
 //        tableStringRepresentation.
@@ -153,7 +179,7 @@ public class MainController {
 //            previewString.append("\n");
 //        }
         fileContentsTextArea.clear();
-        fileContentsTextArea.appendText(previewString.toString());
+        fileContentsTextArea.appendText(previewString);
     }
 
     private List<Range> convertStringToRanges(String inputString) {
