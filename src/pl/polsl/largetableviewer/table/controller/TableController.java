@@ -79,8 +79,8 @@ public class TableController {
      * @param rowSeparator separator of rows
      * @return table representation in form of String
      */
-    public String getTableStringRepresentation(char columnSeparator, char rowSeparator, int cellMaxLength){
-        return tableService.tableStringRepresentation(columnSeparator, rowSeparator, cellMaxLength);
+    public String getTableStringRepresentation(char columnSeparator, char rowSeparator, int cellMaxLength, int numberOfRows){
+        return tableService.tableStringRepresentation(columnSeparator, rowSeparator, cellMaxLength, numberOfRows);
     }
 
     /**
@@ -125,5 +125,9 @@ public class TableController {
      */
     public void exportTable(char columnSeparator, char rowSeparator, int cellMaxLength, File outputFile) throws IOException {
         tableService.exportTableToFile(columnSeparator, rowSeparator, cellMaxLength, outputFile);
+    }
+
+    public void transposeRow(int rowNumber) {
+        tableService.transposeRow(rowNumber);
     }
 }

@@ -53,7 +53,7 @@
               </GridPane.margin>
           </Button>
          <Label text="Input file : " GridPane.rowIndex="1" />
-         <CheckBox mnemonicParsing="false" prefHeight="21.0" prefWidth="117.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
+         <CheckBox fx:id="transposedCheckBox" mnemonicParsing="false" prefHeight="21.0" prefWidth="117.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
             <rotationAxis>
                <Point3D y="1.0" z="1.0" />
             </rotationAxis>
@@ -64,7 +64,7 @@
          <Label text="Filter : " GridPane.rowIndex="4" GridPane.rowSpan="2" />
          <Label text="Field max length : " GridPane.rowIndex="8" />
          <Spinner fx:id="fieldMaxLength" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-         <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="137.0" text="Refresh preview" GridPane.rowIndex="11">
+         <Button fx:id="previewButton" onAction="#handleRefreshButtonAction" mnemonicParsing="false" prefHeight="31.0" prefWidth="137.0" text="Refresh preview" GridPane.rowIndex="11">
             <opaqueInsets>
                <Insets />
             </opaqueInsets>

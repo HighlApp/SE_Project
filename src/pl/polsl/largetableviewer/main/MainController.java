@@ -10,6 +10,8 @@ import pl.polsl.largetableviewer.table.controller.TableController;
 import pl.polsl.largetableviewer.table.exception.TableControllerInitializationException;
 import pl.polsl.largetableviewer.table.exception.WrongColumnException;
 import pl.polsl.largetableviewer.table.exception.WrongRowException;
+import pl.polsl.largetableviewer.table.model.Cell;
+import pl.polsl.largetableviewer.table.model.Row;
 import pl.polsl.largetableviewer.table.model.Table;
 import pl.polsl.largetableviewer.view.AlertHelper;
 
@@ -45,6 +47,8 @@ public class MainController {
     private Button saveNewFilterButton;
     @FXML
     private TextArea fileContentsTextArea;
+    @FXML
+    private CheckBox transposedCheckBox;
 
     private List<Range> filterRanges;
     private List<Range> columnExportRanges;
@@ -62,6 +66,11 @@ public class MainController {
         SpinnerValueFactory<Double> cFilterNumericValueToFactory =
                 new SpinnerValueFactory.DoubleSpinnerValueFactory(-Double.MAX_VALUE, Double.MAX_VALUE, 0);
 
+        fieldMaxLength.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                fieldMaxLength.increment(0); // won't change value, but will commit editor
+            }
+        });
 
         fieldMaxLength.setMaxWidth(Double.POSITIVE_INFINITY);
         fieldMaxLength.setValueFactory(fieldMaxLengthFactory);
@@ -111,46 +120,40 @@ public class MainController {
 
     @FXML
     protected void handleSubmitButtonAction(ActionEvent event) throws TableControllerInitializationException, WrongRowException, WrongColumnException {
-        try {
-            filterRanges = convertStringToRanges(cFilterRange.getText());
-            columnExportRanges = convertStringToRanges(cExportRange.getText());
-            rowExportRanges = convertStringToRanges(rExportRange.getText());
-        } catch (NumberFormatException e) {
-            Window owner = submitButton.getScene().getWindow();
-            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Warning!",
-                    "Incorrect range parameter! The format is as follows: X-X;XX-XX;XXX-XXX");
-            return;
-        }
-        //FIXME
-        tableController = new TableController(
-                colSeparator.getText().charAt(0),
-                rowSeparator.getText().charAt(0),
-                inputFile);
-
-        Table table = tableController.getTable();
-        List<Range> fullTableRowRange = Collections.singletonList(new Range(1, table.getNumberOfRows()));
-        List<Range> fullTableColRange = Collections.singletonList(new Range(1, table.getNumberOfColumns()));
-
-        tableController.setAllCellsVisibility(false); //reset all
-        tableController.setRowsAndColumnsVisibility(
-                translateRangeToIntegerList(rowExportRanges.isEmpty() ? fullTableRowRange : rowExportRanges),
-                translateRangeToIntegerList(columnExportRanges.isEmpty() ? fullTableColRange : columnExportRanges),
-                true);
-        if (!"".equals(cFilterStringValue.getText())) {
-            tableController.sequenceSearch(cFilterStringValue.getText(),
-                    translateRangeToIntegerList(fullTableRowRange),
-                    translateRangeToIntegerList(filterRanges));
-        }
-
-        String tableStringRepresentation = tableController.getTableStringRepresentation(colSeparator.getText().charAt(0), '\n');
-        //%%
-        fileContentsTextArea.clear();
-        fileContentsTextArea.appendText(tableStringRepresentation);
-
-
+        mapRanges();
+        performTransformations();
+        //TODO zapis do pliku
 //        Window owner = submitButton.getScene().getWindow();
 //            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Warning!",
 //                    "Twardy dysk stracił połączenie z twardszym dyskiem, a najtwardszy dysk sobie wypadł!");
+    }
+
+    @FXML
+    protected void handleRefreshButtonAction(ActionEvent event) throws TableControllerInitializationException, WrongColumnException, WrongRowException {
+        mapRanges();
+        performTransformations();
+        String previewString = tableController.getTableStringRepresentation(
+                colSeparator.getText().charAt(0), '\n',
+                (Integer)fieldMaxLength.getValue(), 5);
+//        String tableStringRepresentation = tableController.getTableStringRepresentation(
+//                colSeparator.getText().charAt(0), '\n', (Integer)fieldMaxLength.getValue());
+//        tableStringRepresentation.
+//        Table table = tableController.getTable();
+//        StringBuilder previewString = new StringBuilder();
+//        int counter = 20;
+//        for (Row row : table.getRows()) {
+//            if (row.isVisible()) {
+//                for (Cell cell : row.getCells()) {
+//                    if (cell.isVisible()) {
+//                        previewString.append(cell.getContent()).append(" | ");
+//                    }
+//                }
+//            }
+//            if (--counter <= 0) break;
+//            previewString.append("\n");
+//        }
+        fileContentsTextArea.clear();
+        fileContentsTextArea.appendText(previewString.toString());
     }
 
     private List<Range> convertStringToRanges(String inputString) {
@@ -171,5 +174,47 @@ public class MainController {
             entries.addAll(IntStream.rangeClosed(range.getFrom(), range.getTo()).boxed().collect(Collectors.toSet()));
         }
         return new ArrayList<>(entries);
+    }
+
+    private void performTransformations() throws TableControllerInitializationException, WrongRowException, WrongColumnException {
+        tableController = new TableController(
+                colSeparator.getText().charAt(0),
+                rowSeparator.getText().charAt(0),
+                inputFile);
+
+        Table table = tableController.getTable();
+        List<Range> fullTableRowRange = Collections.singletonList(new Range(1, table.getNumberOfRows()));
+        List<Range> fullTableColRange = Collections.singletonList(new Range(1, table.getNumberOfColumns()));
+
+        tableController.setAllCellsVisibility(false); //reset all
+        tableController.setRowsAndColumnsVisibility(
+                translateRangeToIntegerList(rowExportRanges.isEmpty() ? fullTableRowRange : rowExportRanges),
+                translateRangeToIntegerList(columnExportRanges.isEmpty() ? fullTableColRange : columnExportRanges),
+                true);
+        if (!"".equals(cFilterStringValue.getText())) {
+            tableController.sequenceSearch(cFilterStringValue.getText(),
+                    translateRangeToIntegerList(fullTableRowRange),
+                    translateRangeToIntegerList(filterRanges));
+        }
+
+        if (transposedCheckBox.isSelected()) {
+            for (Row row : table.getRows()) {
+                if (row.isVisible()) {
+                    tableController.transposeRow(row.getRowNumber());
+                }
+            }
+        }
+    }
+
+    private void mapRanges() {
+        try {
+            filterRanges = convertStringToRanges(cFilterRange.getText());
+            columnExportRanges = convertStringToRanges(cExportRange.getText());
+            rowExportRanges = convertStringToRanges(rExportRange.getText());
+        } catch (NumberFormatException e) {
+            Window owner = submitButton.getScene().getWindow();
+            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Warning!",
+                    "Incorrect range parameter! The format is as follows: X-X;XX-XX;XXX-XXX");
+        }
     }
 }

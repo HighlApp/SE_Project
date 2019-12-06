@@ -159,7 +159,7 @@ public class TableService {
         return visibleRows;
     }
 
-    public String tableStringRepresentation(char columnSeparator, char rowSeparator, int cellMaxLength) {
+    public String tableStringRepresentation(char columnSeparator, char rowSeparator, int cellMaxLength, int numberOfRows) {
         StringBuilder stringRepresentation = new StringBuilder();
         boolean cellAffected = false;
         ListIterator<Cell> cellsIterator;
@@ -188,6 +188,7 @@ public class TableService {
                     stringRepresentation.delete(stringRepresentation.length() - 1, stringRepresentation.length());
                     stringRepresentation.append(rowSeparator);
                 }
+                if (--numberOfRows <= 0) break;
             }
         }
         if (stringRepresentation.length() > 0) {
