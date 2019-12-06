@@ -18,7 +18,7 @@
 
 <VBox prefHeight="720.0" prefWidth="1045.0" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.polsl.largetableviewer.main.MainController">
    <children>
-      <HBox prefHeight="40.0" prefWidth="1097.0" style="-fx-background-color: #D5D5D5;">
+      <HBox prefHeight="40.0" prefWidth="1097.0" style="-fx-background-color: #D5D5D5; -fx-background-radius: 0 0 35 35;">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="750.0" prefWidth="1300.0" text="Multiple Large Text File Viewer">
                <font>
@@ -41,6 +41,29 @@
           </columnConstraints>
           <!-- FileName Text Field -->
           <TextField fx:id="fileNameField" editable="false" onMouseClicked="#openFileChooser" prefHeight="40" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+         <Label text="Input file : " GridPane.rowIndex="1" />
+         <Label text="Transposed : " GridPane.rowIndex="9" />
+         <Label text="Column export range : " GridPane.rowIndex="6" />
+         <Label layoutX="57.0" layoutY="292.0" text="Row export range : " GridPane.rowIndex="7" />
+         <Label text="Filter : " GridPane.rowIndex="4" GridPane.rowSpan="2" />
+         <Label text="Field max length : " GridPane.rowIndex="8" />
+         <Button fx:id="previewButton" mnemonicParsing="false" onAction="#handleRefreshButtonAction" prefHeight="31.0" prefWidth="137.0" text="Refresh preview" GridPane.halignment="LEFT" GridPane.rowIndex="11">
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+         </Button>
+         <TextField fx:id="colSeparator" prefWidth="156.0" promptText="Single character" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         <TextField fx:id="rowSeparator" prefWidth="156.0" promptText="Single character" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         <TextField fx:id="cFilterStringValue" promptText="Enter string condition" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+          <TextField fx:id="cFilterRange" promptText="Columns to filter" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+          <TextField fx:id="cExportRange" promptText="ex. 1-4;6-7;12-20" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+          <TextField fx:id="rExportRange" promptText="ex. 1-4;6-7;12-20" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+         <Spinner fx:id="fieldMaxLength" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+         <CheckBox fx:id="transposedCheckBox" mnemonicParsing="false" prefHeight="21.0" prefWidth="117.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
+            <rotationAxis>
+               <Point3D y="1.0" z="1.0" />
+            </rotationAxis>
+         </CheckBox>
       
                   
           <!-- Add Submit Button -->
@@ -49,37 +72,7 @@
                   <Insets bottom="20" left="0" right="0" top="20" />
               </GridPane.margin>
           </Button>
-         <Label text="Input file : " GridPane.rowIndex="1" />
-         <CheckBox fx:id="transposedCheckBox" mnemonicParsing="false" prefHeight="21.0" prefWidth="117.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
-            <rotationAxis>
-               <Point3D y="1.0" z="1.0" />
-            </rotationAxis>
-         </CheckBox>
-         <Label text="Transposed : " GridPane.rowIndex="9" />
-         <Label text="Column export range : " GridPane.rowIndex="6" />
-         <Label layoutX="57.0" layoutY="292.0" text="Row export range : " GridPane.rowIndex="7" />
-         <Label text="Filter : " GridPane.rowIndex="4" GridPane.rowSpan="2" />
-         <Label text="Field max length : " GridPane.rowIndex="8" />
-         <Spinner fx:id="fieldMaxLength" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-         <Button fx:id="previewButton" mnemonicParsing="false" onAction="#handleRefreshButtonAction" prefHeight="31.0" prefWidth="137.0" text="Refresh preview" GridPane.halignment="LEFT" GridPane.rowIndex="11">
-            <opaqueInsets>
-               <Insets />
-            </opaqueInsets>
-         </Button>
-         <Label alignment="CENTER" prefHeight="21.0" prefWidth="754.0" text="Preview panel" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="11">
-            <font>
-               <Font size="30.0" />
-            </font>
-            <GridPane.margin>
-               <Insets left="25.0" />
-            </GridPane.margin>
-         </Label>
-          <TextField fx:id="cFilterRange" promptText="Columns to filter" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-          <TextField fx:id="cExportRange" promptText="ex. 1-4;6-7;12-20" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-          <TextField fx:id="rExportRange" promptText="ex. 1-4;6-7;12-20" GridPane.columnIndex="1" GridPane.rowIndex="7" />
          <Label text="Column separator : " GridPane.rowIndex="2" />
-         <TextField fx:id="colSeparator" prefWidth="156.0" promptText="Single character" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-         <TextField fx:id="cFilterStringValue" promptText="Enter string condition" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          <Label text="Filter storage" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6">
             <font>
                <Font size="28.0" />
@@ -88,7 +81,11 @@
           <ChoiceBox fx:id="selectSavedFilterChoiceBox" onAction="#handleFiterSelectionAction" prefWidth="150.0" value="Select filter" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" />
          <Button fx:id="saveNewFilterButton" mnemonicParsing="false" onAction="#handleSaveNewFilterButtonAction" text="Save new filter" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" />
          <Label text="Row separator : " GridPane.rowIndex="3" />
-         <TextField fx:id="rowSeparator" prefWidth="156.0" promptText="Single character" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="366.0" style="-fx-background-color: #D5D5D5; -fx-background-radius: 60 60 0 0;" text="Preview panel" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="11">
+            <font>
+               <Font size="24.0" />
+            </font>
+         </Label>
          <rowConstraints>
             <RowConstraints />
             <RowConstraints />
