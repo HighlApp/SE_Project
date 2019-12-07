@@ -221,7 +221,7 @@ public class TableService {
                         previousCell = cellsIterator.previous();
                         if (previousCell.isVisible()) {
                             toWrite = previousCell.toString().substring(0, Math.min(previousCell.toString().length(), cellMaxLength));
-                            if (previousCell.getColumnNumber() == table.getNumberOfColumns()) {
+                            if (previousCell.getColumnNumber() == 1) {
                                 bufferedWriter.write(toWrite);
                             } else {
                                 bufferedWriter.write(toWrite + columnSeparator);
