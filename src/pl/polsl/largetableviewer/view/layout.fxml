@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Point3D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="720.0" prefWidth="1045.0" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.polsl.largetableviewer.main.MainController">
+   <children>
+      <HBox prefHeight="40.0" prefWidth="1097.0" style="-fx-background-color: #D5D5D5; -fx-background-radius: 0 0 35 35;">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="750.0" prefWidth="1300.0" text="Multiple Large Text File Viewer">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <GridPane alignment="center" hgap="10" prefHeight="426.0" prefWidth="1045.0" vgap="10">
+          <padding>
+            <Insets left="40.0" right="40.0" top="40.0" />
+         </padding>
+          <columnConstraints>
+              <ColumnConstraints halignment="RIGHT" maxWidth="Infinity" minWidth="100.0" prefWidth="201.0">
+        </ColumnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="113.0" prefWidth="219.0" />
+              <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="Infinity" minWidth="149.0" prefWidth="85.0">
+        </ColumnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="Infinity" minWidth="10.0" prefWidth="10.0" />
+          </columnConstraints>
+          <!-- FileName Text Field -->
+          <TextField fx:id="fileNameField" editable="false" onMouseClicked="#openFileChooser" prefHeight="40" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+         <Label text="Input file : " GridPane.rowIndex="1">
+            <font>
+               <Font name="System Bold" size="15.0" />
+            </font></Label>
+         <Label text="Transposed : " GridPane.rowIndex="10" />
+         <Label text="Column export range : " GridPane.rowIndex="7" />
+         <Label layoutX="57.0" layoutY="292.0" text="Row export range : " GridPane.rowIndex="8" />
+         <Label text="Search filter : " GridPane.rowIndex="5" GridPane.rowSpan="2" />
+         <Label text="Field max length : " GridPane.rowIndex="9" />
+         <Button fx:id="previewButton" defaultButton="true" mnemonicParsing="false" onAction="#handleRefreshButtonAction" prefHeight="31.0" prefWidth="137.0" text="Refresh preview" GridPane.halignment="LEFT" GridPane.rowIndex="11">
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+         </Button>
+         <CheckBox fx:id="newlineCheckBox" mnemonicParsing="false" onAction="#handleNewlineCheckAction" text="Newline" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
+         <TextField fx:id="outputFilePath" prefWidth="156.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+         <TextField fx:id="colSeparator" prefWidth="156.0" promptText="Single character" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         <TextField fx:id="rowSeparator" prefWidth="156.0" promptText="Single character" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+         <TextField fx:id="cFilterStringValue" promptText="String condition" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+          <TextField fx:id="cFilterRange" promptText="Columns to filter" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+          <TextField fx:id="cExportRange" promptText="ex. 1-4;6;12" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+          <TextField fx:id="rExportRange" promptText="ex. 1-4;6;12" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+         <Spinner fx:id="fieldMaxLength" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+         <CheckBox fx:id="transposedCheckBox" mnemonicParsing="false" prefHeight="21.0" prefWidth="117.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
+            <rotationAxis>
+               <Point3D y="1.0" z="1.0" />
+            </rotationAxis>
+         </CheckBox>
+      
+                  
+          <!-- Add Submit Button -->
+          <Button fx:id="submitButton" onAction="#handleSubmitButtonAction" prefHeight="49.0" prefWidth="126.0" text="Export" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="11">
+              <GridPane.margin>
+                  <Insets bottom="20" left="0" right="0" top="20" />
+              </GridPane.margin>
+            <font>
+               <Font name="System Bold" size="21.0" />
+            </font>
+          </Button>
+         <Label text="Column separator : " GridPane.rowIndex="3">
+            <font>
+               <Font name="System Bold" size="15.0" />
+            </font></Label>
+         <Label text="Filter storage" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6">
+            <font>
+               <Font size="28.0" />
+            </font>
+         </Label>
+          <ChoiceBox fx:id="selectSavedFilterChoiceBox" onAction="#handleFiterSelectionAction" prefWidth="150.0" value="Select filter" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+         <Button fx:id="saveNewFilterButton" mnemonicParsing="false" onAction="#handleSaveNewFilterButtonAction" text="Save new filter" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+         <Label text="Row separator : " GridPane.rowIndex="4">
+            <font>
+               <Font name="System Bold" size="15.0" />
+            </font></Label>
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="366.0" style="-fx-background-color: #D5D5D5; -fx-background-radius: 60 60 0 0;" text="Preview panel" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="11">
+            <font>
+               <Font size="24.0" />
+            </font>
+         </Label>
+         <Label text="Output file path : " GridPane.rowIndex="2">
+            <font>
+               <Font name="System Bold" size="15.0" />
+            </font>
+         </Label>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints minHeight="30.0" prefHeight="30.0" />
+            <RowConstraints minHeight="30.0" prefHeight="30.0" />
+            <RowConstraints minHeight="30.0" prefHeight="109.0" />
+            <RowConstraints minHeight="30.0" prefHeight="30.0" />
+            <RowConstraints minHeight="30.0" prefHeight="30.0" />
+            <RowConstraints minHeight="30.0" prefHeight="30.0" />
+            <RowConstraints minHeight="30.0" prefHeight="30.0" />
+            <RowConstraints minHeight="30.0" prefHeight="30.0" />
+            <RowConstraints />
+            <RowConstraints minHeight="50.0" prefHeight="50.0" />
+         </rowConstraints>
+      </GridPane>
+      <TextArea fx:id="fileContentsTextArea" prefHeight="257.0" prefWidth="1045.0" />
+   </children>
+</VBox>

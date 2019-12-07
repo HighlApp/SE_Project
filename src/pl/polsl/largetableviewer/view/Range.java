@@ -1,4 +1,4 @@
-package pl.polsl.coolsoft.controller;
+package pl.polsl.largetableviewer.view;
 
 public class Range {
     private int from;
