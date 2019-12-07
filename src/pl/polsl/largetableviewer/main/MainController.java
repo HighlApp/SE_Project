@@ -17,7 +17,9 @@ import pl.polsl.largetableviewer.table.model.Row;
 import pl.polsl.largetableviewer.table.model.Table;
 import pl.polsl.largetableviewer.view.AlertHelper;
 
+import javax.xml.bind.ValidationException;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -42,6 +44,8 @@ public class MainController {
     @FXML
     private TextField cFilterStringValue;
     @FXML
+    private TextField outputFilePath;
+    @FXML
     private Spinner<Integer> fieldMaxLength;
     @FXML
     private Button submitButton;
@@ -53,6 +57,8 @@ public class MainController {
     private ChoiceBox<String> selectSavedFilterChoiceBox;
     @FXML
     private CheckBox transposedCheckBox;
+    @FXML
+    private CheckBox newlineCheckBox;
 
     private List<Range> filterRanges;
     private List<Range> columnExportRanges;
@@ -80,6 +86,7 @@ public class MainController {
 
         fieldMaxLength.setMaxWidth(Double.POSITIVE_INFINITY);
         fieldMaxLength.setValueFactory(fieldMaxLengthFactory);
+
     }
 
     @FXML
@@ -97,13 +104,23 @@ public class MainController {
     }
 
     @FXML
+    protected void handleNewlineCheckAction(ActionEvent event) {
+        rowSeparator.clear();
+        if (newlineCheckBox.isSelected()) {
+            rowSeparator.setDisable(true);
+        } else {
+            rowSeparator.setDisable(false);
+        }
+    }
+
+    @FXML
     protected void handleSaveNewFilterButtonAction(ActionEvent event) {
         Window owner = saveNewFilterButton.getScene().getWindow();
-        if ("".equals(colSeparator.getText()) || "".equals(rowSeparator.getText())) {
+        if ("".equals(colSeparator.getText()) || ("".equals(rowSeparator.getText()) && !newlineCheckBox.isSelected())) {
             AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Error!",
                     "You must specify separators!");
             return;
-        } else if (colSeparator.getText().length() > 1 || rowSeparator.getText().length() > 1) {
+        } else if (colSeparator.getText().length() > 1 || (!newlineCheckBox.isSelected() && rowSeparator.getText().length() > 1)) {
             AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Error!",
                     "Separator must be a single character!");
             return;
@@ -117,14 +134,20 @@ public class MainController {
             FilterModel filterModel = new FilterModel();
             filterModel.setName(name);
             filterModel.setColumnSeparator(colSeparator.getText().charAt(0));
-            filterModel.setRowSeparator(rowSeparator.getText().charAt(0));
+            if (!newlineCheckBox.isSelected()) {
+                filterModel.setRowSeparator(rowSeparator.getText().charAt(0));
+            }
             filterModel.setColumnExportRange(cExportRange.getText());
             filterModel.setRowExportRange(rExportRange.getText());
             filterModel.setFieldMaxLength(fieldMaxLength.getValue());
             filterModel.setTransposed(transposedCheckBox.isSelected());
+            filterModel.setSearchExpression(cFilterStringValue.getText());
+            filterModel.setSearchRange(cFilterRange.getText());
+            filterModel.setNewline(newlineCheckBox.isSelected());
             try {
                 filterService.saveFilter(filterModel);
                 selectSavedFilterChoiceBox.getItems().add(name);
+                selectSavedFilterChoiceBox.setValue(name);
                 AlertHelper.showAlert(Alert.AlertType.INFORMATION, owner, "Information",
                     "Filter " + name + " has been saved successfuly!");
             } catch (FilterException e) {
@@ -137,47 +160,75 @@ public class MainController {
     protected void handleFiterSelectionAction(ActionEvent event) {
         FilterModel filter = filterService.getModelByName(selectSavedFilterChoiceBox.getValue());
         colSeparator.setText(String.valueOf(filter.getColumnSeparator()));
-        rowSeparator.setText(String.valueOf(filter.getRowSeparator()));
+        if (!filter.isNewline()) {
+            rowSeparator.setText(String.valueOf(filter.getRowSeparator()));
+        } else {
+            rowSeparator.clear();
+        }
         cExportRange.setText(String.valueOf(filter.getColumnExportRange()));
         rExportRange.setText(String.valueOf(filter.getRowExportRange()));
         fieldMaxLength.getValueFactory().setValue(filter.getFieldMaxLength());
         transposedCheckBox.setSelected(filter.isTransposed());
+        cFilterStringValue.setText(filter.getSearchExpression());
+        cFilterRange.setText(filter.getSearchRange());
+        newlineCheckBox.setSelected(filter.isNewline());
+
+        if(newlineCheckBox.isSelected()) {
+            rowSeparator.setDisable(true);
+        } else {
+            rowSeparator.setDisable(false);
+        }
     }
 
     @FXML
-    protected void handleSubmitButtonAction(ActionEvent event) throws TableControllerInitializationException, WrongRowException, WrongColumnException {
+    protected void handleSubmitButtonAction(ActionEvent event) throws TableControllerInitializationException, WrongRowException, WrongColumnException, ValidationException {
+        processRequest();
+        Window owner = submitButton.getScene().getWindow();
+        try {
+            tableController.exportTable(colSeparator.getText().charAt(0),
+                    newlineCheckBox.isSelected() ? '\n' : rowSeparator.getText().charAt(0),
+                    fieldMaxLength.getValue(), outputFilePath.getText());
+        } catch (IOException e) {
+            e.printStackTrace();
+            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Error!",
+                    "An error occured during file export!");
+            return;
+        }
+        AlertHelper.showAlert(Alert.AlertType.INFORMATION, owner, "Info",
+                "File exported successfuly!");
+
+    }
+
+    private void validateSettings() throws ValidationException {
+        String msg = null;
+        if (inputFile == null) {
+            msg = "You have to specify input file!";
+        } else if (outputFilePath.getText().isEmpty()) {
+            msg = "You have to specify output file path!";
+        } else if (colSeparator.getText().isEmpty()) {
+            msg = "You have to specify column separator!";
+        } else if (!newlineCheckBox.isSelected() && rowSeparator.getText().isEmpty()) {
+            msg = "You have to specify row separator!";
+        }
+        if (msg != null) {
+            Window owner = outputFilePath.getScene().getWindow();
+            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Validation error!", msg);
+            throw new ValidationException("Incorrect settings specified by user!");
+        }
+    }
+
+    private void processRequest() throws TableControllerInitializationException, WrongRowException, WrongColumnException, ValidationException {
+        validateSettings();
         mapRanges();
         performTransformations();
-        //TODO zapis do pliku
-//        Window owner = submitButton.getScene().getWindow();
-//            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Warning!",
-//                    "Twardy dysk stracił połączenie z twardszym dyskiem, a najtwardszy dysk sobie wypadł!");
     }
 
     @FXML
-    protected void handleRefreshButtonAction(ActionEvent event) throws TableControllerInitializationException, WrongColumnException, WrongRowException {
-        mapRanges();
-        performTransformations();
+    protected void handleRefreshButtonAction(ActionEvent event) throws TableControllerInitializationException, WrongColumnException, WrongRowException, ValidationException {
+        processRequest();
         String previewString = tableController.getTableStringRepresentation(
                 colSeparator.getText().charAt(0), '\n',
-                (Integer)fieldMaxLength.getValue(), 20);
-//        String tableStringRepresentation = tableController.getTableStringRepresentation(
-//                colSeparator.getText().charAt(0), '\n', (Integer)fieldMaxLength.getValue());
-//        tableStringRepresentation.
-//        Table table = tableController.getTable();
-//        StringBuilder previewString = new StringBuilder();
-//        int counter = 20;
-//        for (Row row : table.getRows()) {
-//            if (row.isVisible()) {
-//                for (Cell cell : row.getCells()) {
-//                    if (cell.isVisible()) {
-//                        previewString.append(cell.getContent()).append(" | ");
-//                    }
-//                }
-//            }
-//            if (--counter <= 0) break;
-//            previewString.append("\n");
-//        }
+                fieldMaxLength.getValue(), 20);
         fileContentsTextArea.clear();
         fileContentsTextArea.appendText(previewString);
     }
@@ -205,7 +256,7 @@ public class MainController {
     private void performTransformations() throws TableControllerInitializationException, WrongRowException, WrongColumnException {
         tableController = new TableController(
                 colSeparator.getText().charAt(0),
-                rowSeparator.getText().charAt(0),
+                newlineCheckBox.isSelected() ? '\n' : rowSeparator.getText().charAt(0),
                 inputFile);
 
         Table table = tableController.getTable();
