@@ -11,11 +11,13 @@ public class FilterModel implements Serializable {
     private String rowExportRange;
     private int fieldMaxLength;
     private boolean transposed;
+    private String searchRange;
+    private String searchExpression;
 
     public FilterModel() {}
 
     public FilterModel(String name, char columnSeparator, char rowSeparator, String columnExportRange,
-                       String rowExportRange, int fieldMaxLength, boolean transposed) {
+                       String rowExportRange, int fieldMaxLength, boolean transposed, String searchRange, String searchExpression) {
         this.name = name;
         this.columnSeparator = columnSeparator;
         this.rowSeparator = rowSeparator;
@@ -23,6 +25,8 @@ public class FilterModel implements Serializable {
         this.rowExportRange = rowExportRange;
         this.fieldMaxLength = fieldMaxLength;
         this.transposed = transposed;
+        this.searchRange = searchRange;
+        this.searchExpression = searchExpression;
     }
 
     public String getName() {
@@ -81,6 +85,22 @@ public class FilterModel implements Serializable {
         this.transposed = transposed;
     }
 
+    public String getSearchRange() {
+        return searchRange;
+    }
+
+    public void setSearchRange(String searchRange) {
+        this.searchRange = searchRange;
+    }
+
+    public String getSearchExpression() {
+        return searchExpression;
+    }
+
+    public void setSearchExpression(String searchExpression) {
+        this.searchExpression = searchExpression;
+    }
+
     @Override
     public String toString() {
         return "FilterModel{" +
@@ -91,6 +111,8 @@ public class FilterModel implements Serializable {
                 ", rowExportRange='" + rowExportRange + '\'' +
                 ", fieldMaxLength=" + fieldMaxLength +
                 ", transposed=" + transposed +
+                ", searchRange='" + searchRange + '\'' +
+                ", searchExpression='" + searchExpression + '\'' +
                 '}';
     }
 }
