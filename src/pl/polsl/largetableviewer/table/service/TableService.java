@@ -99,8 +99,12 @@ public class TableService {
     }
 
     public void setRowsAndColumnsVisibility(List<Integer> rowsNumbers, List<Integer> columnsNumbers, boolean visibility) throws WrongRowException, WrongColumnException {
-        setRowsVisibility(rowsNumbers, visibility);
-        setColumnsVisibility(columnsNumbers, visibility);
+        if (rowsNumbers != null) {
+            setRowsVisibility(rowsNumbers, visibility);
+        }
+        if (columnsNumbers != null) {
+            setColumnsVisibility(columnsNumbers, visibility);
+        }
     }
 
     public Row transposeRow(int rowNumber) {
@@ -129,24 +133,32 @@ public class TableService {
 
     public void setRowsVisibleForSequence(String sequence, List<Integer> inRows, List<Integer> inColumns) throws WrongRowException, WrongColumnException {
         boolean remainVisible = false;
-        if (inRows != null && inColumns != null) {
-            setAllCellsVisibile(false);
-            setRowsAndColumnsVisibility(inRows, inColumns, true);
-        } else {
-            setAllCellsVisibile(true);
+        if (inRows == null || inRows.size() == 0) {
+            throw new WrongRowException("Did not specified any row.");
         }
+        if (inColumns == null || inColumns.size() == 0) {
+            throw new WrongColumnException("Did not specify any column.");
+        }
+        setAllCellsVisibile(false);
+        setRowsAndColumnsVisibility(inRows, inColumns, true);
+
         for (Row row : table.getRows()) {
             if (row.isVisible()) {
                 remainVisible = false;
                 for (Cell cell : row.getCells()) {
-                    if (cell.getContent().contains(sequence)) {
-                        remainVisible = true;
-                        break;
+                    if(cell.isVisible()) {
+                        if (cell.getContent().contains(sequence)) {
+                            remainVisible = true;
+                        }
+                    }else{
+                        cell.setVisible(true);
                     }
                 }
                 row.setVisible(remainVisible);
             }
         }
+
+
     }
 
     public List<Integer> getVisibleRowsNumbers() {
