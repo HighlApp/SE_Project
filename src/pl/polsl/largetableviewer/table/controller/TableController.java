@@ -77,10 +77,12 @@ public class TableController {
      * Usefull for simple table presentation as a String
      * @param columnSeparator separator of column
      * @param rowSeparator separator of rows
+     * @param numberOfRows separator of rows to return
+     * @param numberOfColumns separator of columns to return
      * @return table representation in form of String
      */
-    public String getTableStringRepresentation(char columnSeparator, char rowSeparator, int cellMaxLength, int numberOfRows){
-        return tableService.tableStringRepresentation(columnSeparator, rowSeparator, cellMaxLength, numberOfRows);
+    public String getTableStringRepresentation(char columnSeparator, char rowSeparator, int cellMaxLength, int numberOfRows, int numberOfColumns){
+        return tableService.tableStringRepresentation(columnSeparator, rowSeparator, cellMaxLength, numberOfRows, numberOfColumns);
     }
 
     /**

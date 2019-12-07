@@ -8,7 +8,6 @@ import javafx.stage.Window;
 import pl.polsl.largetableviewer.filter.FilterException;
 import pl.polsl.largetableviewer.filter.FilterModel;
 import pl.polsl.largetableviewer.filter.FilterService;
-import pl.polsl.largetableviewer.view.Range;
 import pl.polsl.largetableviewer.table.controller.TableController;
 import pl.polsl.largetableviewer.table.exception.TableControllerInitializationException;
 import pl.polsl.largetableviewer.table.exception.WrongColumnException;
@@ -16,6 +15,7 @@ import pl.polsl.largetableviewer.table.exception.WrongRowException;
 import pl.polsl.largetableviewer.table.model.Row;
 import pl.polsl.largetableviewer.table.model.Table;
 import pl.polsl.largetableviewer.view.AlertHelper;
+import pl.polsl.largetableviewer.view.Range;
 
 import javax.xml.bind.ValidationException;
 import java.io.File;
@@ -230,7 +230,7 @@ public class MainController {
         processRequest();
         String previewString = tableController.getTableStringRepresentation(
                 colSeparator.getText().charAt(0), '\n',
-                fieldMaxLength.getValue(), 20);
+                fieldMaxLength.getValue(), 20, 200);
         fileContentsTextArea.clear();
         fileContentsTextArea.appendText(previewString);
     }
@@ -266,14 +266,21 @@ public class MainController {
         List<Range> fullTableColRange = Collections.singletonList(new Range(1, table.getNumberOfColumns()));
 
         tableController.setAllCellsVisibility(false); //reset all
-        tableController.setRowsAndColumnsVisibility(
-                translateRangeToIntegerList(rowExportRanges.isEmpty() ? fullTableRowRange : rowExportRanges),
-                translateRangeToIntegerList(columnExportRanges.isEmpty() ? fullTableColRange : columnExportRanges),
-                true);
-        if (!"".equals(cFilterStringValue.getText())) {
-            tableController.sequenceSearch(cFilterStringValue.getText(),
-                    translateRangeToIntegerList(fullTableRowRange),
-                    translateRangeToIntegerList(filterRanges));
+        try {
+            tableController.setRowsAndColumnsVisibility(
+                    translateRangeToIntegerList(rowExportRanges.isEmpty() ? fullTableRowRange : rowExportRanges),
+                    translateRangeToIntegerList(columnExportRanges.isEmpty() ? fullTableColRange : columnExportRanges),
+                    true);
+
+            if (!"".equals(cFilterStringValue.getText())) {
+                tableController.sequenceSearch(cFilterStringValue.getText(),
+                        translateRangeToIntegerList(fullTableRowRange),
+                        translateRangeToIntegerList(filterRanges));
+            }
+        } catch (WrongRowException | WrongColumnException e) {
+            Window owner = outputFilePath.getScene().getWindow();
+            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Error!", "The range specified is too wide");
+            return;
         }
 
         if (transposedCheckBox.isSelected()) {

@@ -171,20 +171,23 @@ public class TableService {
         return visibleRows;
     }
 
-    public String tableStringRepresentation(char columnSeparator, char rowSeparator, int cellMaxLength, int numberOfRows) {
+    public String tableStringRepresentation(char columnSeparator, char rowSeparator, int cellMaxLength, int numberOfRows, int numberOfColumns) {
         StringBuilder stringRepresentation = new StringBuilder();
         boolean cellAffected = false;
+        int columnsNo;
         ListIterator<Cell> cellsIterator;
         Cell previousCell;
         for (Row row : table.getRows()) {
             if (row.isVisible()) {
                 cellAffected = false;
+                columnsNo = numberOfColumns;
                 if (!row.isTranspose()) {
                     for (Cell cell : row.getCells()) {
                         if (cell.isVisible()) {
                             stringRepresentation.append(cell.toString().substring(0, Math.min(cell.toString().length(), cellMaxLength)) + columnSeparator);
                             cellAffected = true;
                         }
+                        if (--columnsNo <= 0) break;
                     }
                 } else { //row is transposed
                     cellsIterator = row.getCells().listIterator(row.getCells().size());
@@ -195,6 +198,7 @@ public class TableService {
                             cellAffected = true;
                         }
                     }
+                    if (--columnsNo <= 0) break;
                 }
                 if (cellAffected) {
                     stringRepresentation.delete(stringRepresentation.length() - 1, stringRepresentation.length());
