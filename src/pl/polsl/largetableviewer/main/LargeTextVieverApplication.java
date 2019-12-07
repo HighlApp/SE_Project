@@ -17,7 +17,7 @@ public class LargeTextVieverApplication extends Application {
         Parent root = FXMLLoader.load(url);
         primaryStage.setTitle("Multiple Large Text File Viewer");
         setUserAgentStylesheet(STYLESHEET_MODENA);
-        primaryStage.setScene(new Scene(root, 1100, 800));
+        primaryStage.setScene(new Scene(root, 1100, 780));
         primaryStage.setMaxWidth(1100);
         primaryStage.setMinWidth(800);
         primaryStage.show();

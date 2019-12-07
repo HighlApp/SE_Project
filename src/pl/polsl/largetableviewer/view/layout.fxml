@@ -50,16 +50,16 @@
          <Label layoutX="57.0" layoutY="292.0" text="Row export range : " GridPane.rowIndex="8" />
          <Label text="Search filter : " GridPane.rowIndex="5" GridPane.rowSpan="2" />
          <Label text="Field max length : " GridPane.rowIndex="9" />
-         <Button fx:id="previewButton" defaultButton="true" mnemonicParsing="false" onAction="#handleRefreshButtonAction" prefHeight="31.0" prefWidth="137.0" text="Refresh preview" GridPane.halignment="LEFT" GridPane.rowIndex="12">
+         <Button fx:id="previewButton" defaultButton="true" mnemonicParsing="false" onAction="#handleRefreshButtonAction" prefHeight="31.0" prefWidth="137.0" text="Refresh preview" GridPane.halignment="LEFT" GridPane.rowIndex="11">
             <opaqueInsets>
                <Insets />
             </opaqueInsets>
          </Button>
          <CheckBox fx:id="newlineCheckBox" mnemonicParsing="false" onAction="#handleNewlineCheckAction" text="Newline" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
-         <TextField fx:id="outputFilePath" prefWidth="156.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         <TextField fx:id="outputFilePath" prefWidth="156.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
          <TextField fx:id="colSeparator" prefWidth="156.0" promptText="Single character" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          <TextField fx:id="rowSeparator" prefWidth="156.0" promptText="Single character" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-         <TextField fx:id="cFilterStringValue" promptText="Enter string condition" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+         <TextField fx:id="cFilterStringValue" promptText="String condition" GridPane.columnIndex="1" GridPane.rowIndex="5" />
           <TextField fx:id="cFilterRange" promptText="Columns to filter" GridPane.columnIndex="1" GridPane.rowIndex="6" />
           <TextField fx:id="cExportRange" promptText="ex. 1-4;6;12" GridPane.columnIndex="1" GridPane.rowIndex="7" />
           <TextField fx:id="rExportRange" promptText="ex. 1-4;6;12" GridPane.columnIndex="1" GridPane.rowIndex="8" />
@@ -72,7 +72,7 @@
       
                   
           <!-- Add Submit Button -->
-          <Button fx:id="submitButton" onAction="#handleSubmitButtonAction" prefHeight="49.0" prefWidth="126.0" text="Export" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="11">
+          <Button fx:id="submitButton" onAction="#handleSubmitButtonAction" prefHeight="49.0" prefWidth="126.0" text="Export" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="11">
               <GridPane.margin>
                   <Insets bottom="20" left="0" right="0" top="20" />
               </GridPane.margin>
@@ -84,18 +84,18 @@
             <font>
                <Font name="System Bold" size="15.0" />
             </font></Label>
-         <Label text="Filter storage" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7">
+         <Label text="Filter storage" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6">
             <font>
                <Font size="28.0" />
             </font>
          </Label>
-          <ChoiceBox fx:id="selectSavedFilterChoiceBox" onAction="#handleFiterSelectionAction" prefWidth="150.0" value="Select filter" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-         <Button fx:id="saveNewFilterButton" mnemonicParsing="false" onAction="#handleSaveNewFilterButtonAction" text="Save new filter" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+          <ChoiceBox fx:id="selectSavedFilterChoiceBox" onAction="#handleFiterSelectionAction" prefWidth="150.0" value="Select filter" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+         <Button fx:id="saveNewFilterButton" mnemonicParsing="false" onAction="#handleSaveNewFilterButtonAction" text="Save new filter" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" />
          <Label text="Row separator : " GridPane.rowIndex="4">
             <font>
                <Font name="System Bold" size="15.0" />
             </font></Label>
-         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="366.0" style="-fx-background-color: #D5D5D5; -fx-background-radius: 60 60 0 0;" text="Preview panel" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="12">
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="366.0" style="-fx-background-color: #D5D5D5; -fx-background-radius: 60 60 0 0;" text="Preview panel" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="11">
             <font>
                <Font size="24.0" />
             </font>
@@ -116,7 +116,6 @@
             <RowConstraints minHeight="30.0" prefHeight="30.0" />
             <RowConstraints minHeight="30.0" prefHeight="30.0" />
             <RowConstraints minHeight="30.0" prefHeight="30.0" />
-            <RowConstraints />
             <RowConstraints />
             <RowConstraints minHeight="50.0" prefHeight="50.0" />
          </rowConstraints>

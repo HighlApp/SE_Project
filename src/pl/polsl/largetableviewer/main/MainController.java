@@ -209,6 +209,8 @@ public class MainController {
             msg = "You have to specify column separator!";
         } else if (!newlineCheckBox.isSelected() && rowSeparator.getText().isEmpty()) {
             msg = "You have to specify row separator!";
+        } else if (!cFilterStringValue.getText().isEmpty() && cFilterRange.getText().isEmpty()) {
+            msg = "You have to specify columns for search filter!";
         }
         if (msg != null) {
             Window owner = outputFilePath.getScene().getWindow();
