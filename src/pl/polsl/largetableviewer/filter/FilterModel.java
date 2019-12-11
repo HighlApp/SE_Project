@@ -14,11 +14,13 @@ public class FilterModel implements Serializable {
     private String searchRange;
     private String searchExpression;
     private boolean newline;
+    private boolean tab;
+    private boolean colTab;
 
     public FilterModel() {}
 
     public FilterModel(String name, char columnSeparator, char rowSeparator, String columnExportRange,
-                       String rowExportRange, int fieldMaxLength, boolean transposed, String searchRange, String searchExpression, boolean newline) {
+                       String rowExportRange, int fieldMaxLength, boolean transposed, String searchRange, String searchExpression, boolean newline, boolean tab, boolean colTab) {
         this.name = name;
         this.columnSeparator = columnSeparator;
         this.rowSeparator = rowSeparator;
@@ -29,6 +31,8 @@ public class FilterModel implements Serializable {
         this.searchRange = searchRange;
         this.searchExpression = searchExpression;
         this.newline = newline;
+        this.tab = tab;
+        this.colTab = colTab;
     }
 
     public String getName() {
@@ -111,6 +115,22 @@ public class FilterModel implements Serializable {
         this.newline = newline;
     }
 
+    public boolean isTab() {
+        return tab;
+    }
+
+    public void setTab(boolean tab) {
+        this.tab = tab;
+    }
+
+    public boolean isColTab() {
+        return colTab;
+    }
+
+    public void setColTab(boolean colTab) {
+        this.colTab = colTab;
+    }
+
     @Override
     public String toString() {
         return "FilterModel{" +
@@ -124,6 +144,8 @@ public class FilterModel implements Serializable {
                 ", searchRange='" + searchRange + '\'' +
                 ", searchExpression='" + searchExpression + '\'' +
                 ", newline=" + newline +
+                ", tab=" + tab +
+                ", colTab=" + colTab +
                 '}';
     }
 }
