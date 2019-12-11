@@ -228,7 +228,11 @@ public class MainController {
         Window owner = submitButton.getScene().getWindow();
         char rSeparator = allotSeparator();
 
+
         try {
+            if (!outputFilePath.getText().contains(File.separator)) {
+                outputFilePath.setText(inputFile.getParent() + File.separator + outputFilePath.getText());
+            }
             tableController.exportTable(
                     colTabCheckBox.isSelected() ? '\t' : colSeparator.getText().charAt(0),
                     rSeparator,
