@@ -208,6 +208,8 @@ public class TableService {
         return stringRepresentation.toString();
     }
 
+
+
     public void exportTableToFile(char columnSeparator, char rowSeparator, int cellMaxLength, File outputFile) throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
         ListIterator<Cell> cellsIterator;
