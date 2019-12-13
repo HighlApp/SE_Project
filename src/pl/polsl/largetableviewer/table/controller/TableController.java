@@ -126,4 +126,14 @@ public class TableController {
     public void exportTable(char columnSeparator, char rowSeparator, int cellMaxLength, File outputFile) throws IOException {
         tableService.exportTableToFile(columnSeparator, rowSeparator, cellMaxLength, outputFile);
     }
+
+    public List<Integer> getTableVisibleRowsNumbers(){
+        return tableService.getVisibleRowsNumbers();
+    }
+
+    public List<Integer> getTableVisibleColumnsNumbers(){
+        return tableService.getVisibileColumnsNumbers();
+    }
+
+    
 }
