@@ -7,6 +7,7 @@ import pl.polsl.largetableviewer.table.model.Row;
 import pl.polsl.largetableviewer.table.model.Table;
 
 import java.io.*;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -210,7 +211,10 @@ public class TableService {
 
 
 
-    public void exportTableToFile(char columnSeparator, char rowSeparator, int cellMaxLength, File outputFile) throws IOException {
+    public void exportTableToFile(char columnSeparator, char rowSeparator, int cellMaxLength, File outputFile) throws IOException, FileAlreadyExistsException{
+        if(outputFile.isFile()){
+            throw new FileAlreadyExistsException("Specified output file is already present. Please specify another path.");
+        }
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
         ListIterator<Cell> cellsIterator;
         Cell previousCell;
