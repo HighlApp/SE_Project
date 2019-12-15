@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="720.0" prefWidth="1045.0" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.polsl.largetableviewer.main.MainController">
+<VBox prefHeight="720.0" prefWidth="1045.0" xmlns="http://javafx.com/javafx/8.0.231" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.polsl.largetableviewer.main.MainController">
    <children>
       <HBox prefHeight="40.0" prefWidth="1097.0" style="-fx-background-color: #D5D5D5; -fx-background-radius: 0 0 35 35;">
          <children>
@@ -55,7 +55,8 @@
                <Insets />
             </opaqueInsets>
          </Button>
-         <CheckBox fx:id="newlineCheckBox" mnemonicParsing="false" onAction="#handleNewlineCheckAction" text="Newline" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
+         <CheckBox fx:id="tabCheckBox" mnemonicParsing="false" onAction="#handleSeparatorCheckAction" text="Tab" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
+         <CheckBox fx:id="newlineCheckBox" mnemonicParsing="false" onAction="#handleSeparatorCheckAction" text="Newline" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
          <TextField fx:id="outputFilePath" prefWidth="156.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
          <TextField fx:id="colSeparator" prefWidth="156.0" promptText="Single character" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          <TextField fx:id="rowSeparator" prefWidth="156.0" promptText="Single character" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -105,6 +106,7 @@
                <Font name="System Bold" size="15.0" />
             </font>
          </Label>
+         <CheckBox fx:id="colTabCheckBox" mnemonicParsing="false" onAction="#handleColSeparatorCheckAction" text="Tab" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
          <rowConstraints>
             <RowConstraints />
             <RowConstraints />

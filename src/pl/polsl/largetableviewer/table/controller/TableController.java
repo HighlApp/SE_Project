@@ -132,4 +132,14 @@ public class TableController {
     public void transposeRow(int rowNumber) {
         tableService.transposeRow(rowNumber);
     }
+
+    public List<Integer> getTableVisibleRowsNumbers(){
+        return tableService.getVisibleRowsNumbers();
+    }
+
+    public List<Integer> getTableVisibleColumnsNumbers(){
+        return tableService.getVisibileColumnsNumbers();
+    }
+
+
 }
