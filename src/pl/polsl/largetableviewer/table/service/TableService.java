@@ -7,6 +7,7 @@ import pl.polsl.largetableviewer.table.model.Row;
 import pl.polsl.largetableviewer.table.model.Table;
 
 import java.io.*;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -99,10 +100,10 @@ public class TableService {
     }
 
     public void setRowsAndColumnsVisibility(List<Integer> rowsNumbers, List<Integer> columnsNumbers, boolean visibility) throws WrongRowException, WrongColumnException {
-        if (rowsNumbers != null) {
+        if (rowsNumbers != null || !rowsNumbers.isEmpty()) {
             setRowsVisibility(rowsNumbers, visibility);
         }
-        if (columnsNumbers != null) {
+        if (columnsNumbers != null || !columnsNumbers.isEmpty()) {
             setColumnsVisibility(columnsNumbers, visibility);
         }
     }
@@ -213,18 +214,42 @@ public class TableService {
         return stringRepresentation.toString();
     }
 
-    public void exportTableToFile(char columnSeparator, char rowSeparator, int cellMaxLength, File outputFile) throws IOException {
+    public List<Integer> getVisibileColumnsNumbers(){
+        List<Integer> visibleColumns = new LinkedList<>();
+        for(Row row : table.getRows()){
+            if(row.isVisible()){
+                for(Cell cell : row.getCells()){
+                    if(cell.isVisible()){
+                        visibleColumns.add(cell.getColumnNumber());
+                    }
+                }
+                break;
+            }
+        }
+        return visibleColumns;
+    }
+
+
+
+    public void exportTableToFile(char columnSeparator, char rowSeparator, int cellMaxLength, File outputFile) throws IOException, FileAlreadyExistsException{
+        if(outputFile.isDirectory()){
+            throw new FileAlreadyExistsException("Specified output path is already present. Please specify another path.");
+        }
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
         ListIterator<Cell> cellsIterator;
         Cell previousCell;
         String toWrite;
+        int columnsPerRow=getVisibileColumnsNumbers().size();
+        int writeNumber;
         for (Row row : table.getRows()) {
             if (row.isVisible()) {
+                writeNumber=0;
                 if (!row.isTranspose()) {
                     for (Cell cell : row.getCells()) {
                         if (cell.isVisible()) {
+                            ++writeNumber;
                             toWrite = cell.toString().substring(0, Math.min(cell.toString().length(), cellMaxLength));
-                            if (cell.getColumnNumber() == table.getNumberOfColumns()) {
+                            if (writeNumber == columnsPerRow) {
                                 bufferedWriter.write(toWrite);
                             } else {
                                 bufferedWriter.write(toWrite + columnSeparator);
@@ -236,8 +261,9 @@ public class TableService {
                     while (cellsIterator.hasPrevious()) {
                         previousCell = cellsIterator.previous();
                         if (previousCell.isVisible()) {
+                            ++writeNumber;
                             toWrite = previousCell.toString().substring(0, Math.min(previousCell.toString().length(), cellMaxLength));
-                            if (previousCell.getColumnNumber() == 1) {
+                            if (writeNumber == columnsPerRow) {
                                 bufferedWriter.write(toWrite);
                             } else {
                                 bufferedWriter.write(toWrite + columnSeparator);
