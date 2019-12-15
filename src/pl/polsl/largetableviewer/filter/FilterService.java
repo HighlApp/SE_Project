@@ -8,7 +8,6 @@ import java.util.List;
 public class FilterService {
 
     private final String fileName = "./filterList";
-    private FilterModel activeModel;
     private List<FilterModel> filterList;
 
     public FilterService() {
@@ -55,8 +54,6 @@ public class FilterService {
                 objectInputStream.close();
                 fileInputStream.close();
 
-                setActiveModel(filterList);
-
                 return filterList;
 
             } catch (IOException e) {
@@ -69,19 +66,35 @@ public class FilterService {
     }
 
     public FilterModel getModelByName(String name) {
-        return filterList.stream()
+        FilterModel filterModel = filterList.stream()
                 .filter(filter -> filter.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+        setRecentlyUsed(filterModel);
+        return filterModel;
+    }
+
+    public FilterModel getActiveModel() {
+        return filterList.stream()
+                .filter(FilterModel::isRecentlyUsed)
                 .findFirst()
                 .orElse(null);
     }
 
-    public void deleteFilter(String name) {
+    private void setRecentlyUsed(FilterModel filterModel) {
+        if(filterModel != null) {
+            try {
+                changeActiveFlag(filterModel);
+            } catch (FilterException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void deleteFilter(String name) {
         filterList.removeIf(filter -> filter.getName().equals(name));
     }
 
-    public FilterModel getActiveModel() {
-        return activeModel;
-    }
 
     private boolean nameAlreadyExists(List<FilterModel> filterList, FilterModel filterModel) {
         return filterList.stream().anyMatch(filter -> filter.getName().equals(filterModel.getName()));
@@ -92,13 +105,29 @@ public class FilterService {
             filterList.remove(0);
     }
 
-    private void setActiveModel(List<FilterModel> filterList) {
-        this.activeModel = filterList.get(filterList.size() - 1);
-    }
-
     private boolean doesFileExist() {
         File tmpDir = new File(fileName);
         return tmpDir.exists();
     }
+
+    private void changeActiveFlag(FilterModel filterModel) throws FilterException {
+
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream("filterList");
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+
+            filterList.forEach(filter -> filter.setRecentlyUsed(false));
+            filterModel.setRecentlyUsed(true);
+
+            objectOutputStream.writeObject(filterList);
+
+            objectOutputStream.close();
+            fileOutputStream.close();
+
+        } catch (IOException e) {
+            throw new FilterException("Error while editing object! " + e.getMessage());
+        }
+    }
+
 
 }
