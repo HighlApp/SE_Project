@@ -93,6 +93,11 @@ public class MainController {
         fieldMaxLength.setMaxWidth(Double.POSITIVE_INFINITY);
         fieldMaxLength.setValueFactory(fieldMaxLengthFactory);
         isCheckboxSelected = false;
+
+        FilterModel activeModel = filterService.getActiveModel();
+        if (activeModel != null) {
+            applyFilter(activeModel);
+        }
     }
 
     @FXML
@@ -104,7 +109,6 @@ public class MainController {
         inputFile = fileChooser.showOpenDialog(owner);
         if (inputFile == null) {
             return;
-            //TODO error
         }
         fileNameField.setText(inputFile.toString());
     }
@@ -189,7 +193,10 @@ public class MainController {
     @FXML
     protected void handleFiterSelectionAction(ActionEvent event) {
         FilterModel filter = filterService.getModelByName(selectSavedFilterChoiceBox.getValue());
+        applyFilter(filter);
+    }
 
+    private void applyFilter(FilterModel filter) {
         if (!filter.isColTab()) {
             colSeparator.setText(String.valueOf(filter.getColumnSeparator()));
         } else {
@@ -220,6 +227,8 @@ public class MainController {
         } else {
             colSeparator.setDisable(false);
         }
+        selectSavedFilterChoiceBox.setValue(filter.getName());
+        isCheckboxSelected = true; //we assume it was correctly saved
     }
 
     @FXML
@@ -317,6 +326,15 @@ public class MainController {
         return new ArrayList<>(entries);
     }
 
+    private List<Integer> determineEntriesToHide(List<Integer> intEntries, List<Range> fullTableRange) {
+        if (intEntries.isEmpty()) {
+            return new ArrayList<>();
+        }
+        TreeSet<Integer> entries = new TreeSet<>(IntStream.rangeClosed(fullTableRange.get(0).getFrom(), fullTableRange.get(0).getTo()).boxed().collect(Collectors.toSet()));
+        entries.removeAll(intEntries);
+        return new ArrayList<>(entries);
+    }
+
     private void performTransformations() throws TableControllerInitializationException, WrongRowException, WrongColumnException {
         char rSeparator = allotSeparator();
         tableController = new TableController(colTabCheckBox.isSelected() ? '\t' : colSeparator.getText().charAt(0),
@@ -326,18 +344,23 @@ public class MainController {
         List<Range> fullTableRowRange = Collections.singletonList(new Range(1, table.getNumberOfRows()));
         List<Range> fullTableColRange = Collections.singletonList(new Range(1, table.getNumberOfColumns()));
 
-        tableController.setAllCellsVisibility(false); //reset all
+//        tableController.setAllCellsVisibility(false); //reset all
         try {
-            tableController.setRowsAndColumnsVisibility(
-                    translateRangeToIntegerList(rowExportRanges.isEmpty() ? fullTableRowRange : rowExportRanges),
-                    translateRangeToIntegerList(columnExportRanges.isEmpty() ? fullTableColRange : columnExportRanges),
-                    true);
+            List<Integer> rowIntegers = translateRangeToIntegerList(rowExportRanges);
+            List<Integer> colIntegers = translateRangeToIntegerList(columnExportRanges);
 
             if (!"".equals(cFilterStringValue.getText())) {
                 tableController.sequenceSearch(cFilterStringValue.getText(),
                         translateRangeToIntegerList(fullTableRowRange),
                         translateRangeToIntegerList(filterRanges));
             }
+
+            tableController.setRowsAndColumnsVisibility(
+                    determineEntriesToHide(rowIntegers, fullTableRowRange),
+                    determineEntriesToHide(colIntegers, fullTableColRange),
+                    false);
+
+
         } catch (WrongRowException | WrongColumnException e) {
             Window owner = outputFilePath.getScene().getWindow();
             AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Error!", "The range specified is too wide");
