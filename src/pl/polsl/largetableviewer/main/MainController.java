@@ -154,6 +154,10 @@ public class MainController {
             AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Error!",
                     "Separator must be a single character!");
             return;
+        } else if ((colTabCheckBox.isSelected() && tabCheckBox.isSelected()) || (!colSeparator.getText().isEmpty() && colSeparator.getText().equals(rowSeparator.getText()))) {
+            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Error!",
+                    "You have to specify non-uniform row and column separators!");
+            return;
         }
         TextInputDialog dialog = new TextInputDialog();
         dialog.setHeaderText("Saving new filter");
@@ -279,6 +283,8 @@ public class MainController {
             msg = "You have to specify column separator!";
         } else if (!isCheckboxSelected && rowSeparator.getText().isEmpty()) {
             msg = "You have to specify row separator!";
+        }  else if ((colTabCheckBox.isSelected() && tabCheckBox.isSelected()) || (!colSeparator.getText().isEmpty() && colSeparator.getText().equals(rowSeparator.getText()))) {
+            msg = "You have to specify non-uniform row and column separators!";
         } else if (!cFilterStringValue.getText().isEmpty() && cFilterRange.getText().isEmpty()) {
             msg = "You have to specify columns for search filter!";
         }
