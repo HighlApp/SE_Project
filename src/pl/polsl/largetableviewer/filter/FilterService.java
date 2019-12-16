@@ -25,6 +25,8 @@ public class FilterService {
         }
 
         filterList.add(filterModel);
+        filterList.forEach(filter -> filter.setRecentlyUsed(false));
+        filterModel.setRecentlyUsed(true);
 
         try {
             FileOutputStream fileOutputStream = new FileOutputStream("filterList");
