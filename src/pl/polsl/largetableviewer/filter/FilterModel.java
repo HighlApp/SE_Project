@@ -16,11 +16,13 @@ public class FilterModel implements Serializable {
     private boolean newline;
     private boolean tab;
     private boolean colTab;
+    private boolean recentlyUsed;
 
     public FilterModel() {}
 
     public FilterModel(String name, char columnSeparator, char rowSeparator, String columnExportRange,
-                       String rowExportRange, int fieldMaxLength, boolean transposed, String searchRange, String searchExpression, boolean newline, boolean tab, boolean colTab) {
+                       String rowExportRange, int fieldMaxLength, boolean transposed, String searchRange,
+                       String searchExpression, boolean newline, boolean tab, boolean colTab, boolean recentlyUsed) {
         this.name = name;
         this.columnSeparator = columnSeparator;
         this.rowSeparator = rowSeparator;
@@ -33,6 +35,7 @@ public class FilterModel implements Serializable {
         this.newline = newline;
         this.tab = tab;
         this.colTab = colTab;
+        this.recentlyUsed = recentlyUsed;
     }
 
     public String getName() {
@@ -129,6 +132,14 @@ public class FilterModel implements Serializable {
 
     public void setColTab(boolean colTab) {
         this.colTab = colTab;
+    }
+
+    public boolean isRecentlyUsed() {
+        return recentlyUsed;
+    }
+
+    public void setRecentlyUsed(boolean recentlyUsed) {
+        this.recentlyUsed = recentlyUsed;
     }
 
     @Override
