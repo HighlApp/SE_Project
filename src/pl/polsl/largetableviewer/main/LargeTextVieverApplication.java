@@ -13,7 +13,6 @@ public class LargeTextVieverApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-//        URL url = new File("src/pl/polsl/largetableviewer/view/layout.fxml").toURI().toURL();
         URL resource = getClass().getResource("/pl/polsl/largetableviewer/view/layout.fxml");
         Parent root = FXMLLoader.load(resource);
         primaryStage.setTitle("Multiple Large Text File Viewer");

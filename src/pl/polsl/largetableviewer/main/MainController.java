@@ -240,8 +240,6 @@ public class MainController {
         processRequest();
         Window owner = submitButton.getScene().getWindow();
         char rSeparator = allotSeparator();
-
-
         try {
             if (!outputFilePath.getText().contains(File.separator)) {
                 outputFilePath.setText(inputFile.getParent() + File.separator + outputFilePath.getText());
@@ -258,7 +256,6 @@ public class MainController {
         }
         AlertHelper.showAlert(Alert.AlertType.INFORMATION, owner, "Info",
                 "File exported successfuly!");
-
     }
 
     private char allotSeparator() {
@@ -349,8 +346,6 @@ public class MainController {
         Table table = tableController.getTable();
         List<Range> fullTableRowRange = Collections.singletonList(new Range(1, table.getNumberOfRows()));
         List<Range> fullTableColRange = Collections.singletonList(new Range(1, table.getNumberOfColumns()));
-
-//        tableController.setAllCellsVisibility(false); //reset all
         try {
             List<Integer> rowIntegers = translateRangeToIntegerList(rowExportRanges);
             List<Integer> colIntegers = translateRangeToIntegerList(columnExportRanges);
@@ -365,8 +360,6 @@ public class MainController {
                     determineEntriesToHide(rowIntegers, fullTableRowRange),
                     determineEntriesToHide(colIntegers, fullTableColRange),
                     false);
-
-
         } catch (WrongRowException | WrongColumnException e) {
             Window owner = outputFilePath.getScene().getWindow();
             AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Error!", "The range specified is too wide");
