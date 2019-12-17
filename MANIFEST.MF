@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Implementation-Title: SE_Project
+X-COMMENT: Main-Class will be added automatically by build
+Implementation-Version: 1.0
+Permissions: sandbox
+Codebase: *
+JavaFX-Version: 8.0
+Class-Path: 
+Created-By: JavaFX Packager
+Implementation-Vendor: barte
+Main-Class: pl.polsl.largetableviewer.main.LargeTextVieverApplication
+
